@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.API", "SistemaEstoque.API\SistemaEstoque.API.csproj", "{EDB92678-0CA4-4570-9D27-B6E2C2D8E59F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Infra", "SistemaEstoque.Infra\SistemaEstoque.Infra.csproj", "{B6E36A1C-9362-440B-913D-FAEB8A619B47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDB92678-0CA4-4570-9D27-B6E2C2D8E59F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB92678-0CA4-4570-9D27-B6E2C2D8E59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB92678-0CA4-4570-9D27-B6E2C2D8E59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB92678-0CA4-4570-9D27-B6E2C2D8E59F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6E36A1C-9362-440B-913D-FAEB8A619B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6E36A1C-9362-440B-913D-FAEB8A619B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6E36A1C-9362-440B-913D-FAEB8A619B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6E36A1C-9362-440B-913D-FAEB8A619B47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5372FDFA-6CA3-47B5-AC9F-6E3208CC1FBB}
+	EndGlobalSection
+EndGlobal

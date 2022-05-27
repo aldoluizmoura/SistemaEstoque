@@ -2,11 +2,11 @@
 {
     public abstract class Entity
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
         public Entity()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
         }
     }
 }

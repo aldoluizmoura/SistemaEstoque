@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1NeL6LQM0N9wxMccNWExt0zaoQHQbbj6GUQgr+576oT0xZTD9c9BFqHmjJwmoszs2PyMoV3AS39eHNI1IrPRyQ==",
+  "dgSpecHash": "0nZwf93oOXJorlCmhxiRgoP3iR7UR0JpI9NqjVrStojAyT7ITGuv47n1XXv49IZy0Z2P2wnU2W8ZX7oy6Eg0EQ==",
   "success": true,
-  "projectFilePath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
+  "projectFilePath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AldoLuiz\\.nuget\\packages\\azure.core\\1.6.0\\azure.core.1.6.0.nupkg.sha512",
     "C:\\Users\\AldoLuiz\\.nuget\\packages\\azure.identity\\1.3.0\\azure.identity.1.3.0.nupkg.sha512",

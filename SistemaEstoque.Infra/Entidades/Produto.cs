@@ -22,7 +22,7 @@ namespace SistemaEstoque.Infra.Entidades
         public Usuario Usuario { get; private set; }
         public bool Ativo { get; private set; }
 
-        protected Produto(){}
+        public Produto(){}
         public Produto(string descricao, double preco, int quantidadeEstoque, string marca, string modelo,
                        Guid fabricanteId, Guid categoriaId, DateTime dataCadastro, 
                        DateTime? dataVencimento, string imagem, Guid usuarioId, bool activo)

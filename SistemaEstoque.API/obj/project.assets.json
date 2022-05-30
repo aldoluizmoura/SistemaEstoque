@@ -2,6 +2,31 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "AutoMapper/11.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/AutoMapper.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.dll": {}
+        }
+      },
+      "AutoMapper.Extensions.Microsoft.DependencyInjection/11.0.0": {
+        "type": "package",
+        "dependencies": {
+          "AutoMapper": "11.0.0",
+          "Microsoft.Extensions.Options": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        }
+      },
       "Azure.Core/1.6.0": {
         "type": "package",
         "dependencies": {
@@ -56,7 +81,7 @@
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {}
         }
       },
-      "Microsoft.CSharp/4.5.0": {
+      "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.0/_._": {}
@@ -955,10 +980,52 @@
         "runtime": {
           "bin/placeholder/SistemaEstoque.Infra.dll": {}
         }
+      },
+      "SistemaEstoque.Negocio/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "SistemaEstoque.Infra": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SistemaEstoque.Negocio.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SistemaEstoque.Negocio.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "AutoMapper/11.0.0": {
+      "sha512": "+596AnKykYCk9RxXCEF4GYuapSebQtFVvIA1oVG1rrRkCLAC7AkWehJ0brCfYUbdDW3v1H/p0W3hob7JoXGjMw==",
+      "type": "package",
+      "path": "automapper/11.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "automapper.11.0.0.nupkg.sha512",
+        "automapper.nuspec",
+        "icon.png",
+        "lib/netstandard2.1/AutoMapper.dll",
+        "lib/netstandard2.1/AutoMapper.xml"
+      ]
+    },
+    "AutoMapper.Extensions.Microsoft.DependencyInjection/11.0.0": {
+      "sha512": "0asw5WxdCFh2OTi9Gv+oKyH9SzxwYQSnO8TV5Dd0GggovILzJW4UimP26JAcxc3yB5NnC5urooZ1BBs8ElpiBw==",
+      "type": "package",
+      "path": "automapper.extensions.microsoft.dependencyinjection/11.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
+        "automapper.extensions.microsoft.dependencyinjection.nuspec",
+        "icon.png",
+        "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
+      ]
+    },
     "Azure.Core/1.6.0": {
       "sha512": "kI4m2NsODPOrxo0OoKjk6B3ADbdovhDQIEmI4039upjjZKRaewVLx/Uz4DfRa/NtnIRZQPUALe1yvdHWAoRt4w==",
       "type": "package",
@@ -1035,10 +1102,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.CSharp/4.5.0": {
-      "sha512": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
+    "Microsoft.CSharp/4.7.0": {
+      "sha512": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
       "type": "package",
-      "path": "microsoft.csharp/4.5.0",
+      "path": "microsoft.csharp/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1051,6 +1118,7 @@
         "lib/netcoreapp2.0/_._",
         "lib/netstandard1.3/Microsoft.CSharp.dll",
         "lib/netstandard2.0/Microsoft.CSharp.dll",
+        "lib/netstandard2.0/Microsoft.CSharp.xml",
         "lib/portable-net45+win8+wp8+wpa81/_._",
         "lib/uap10.0.16299/_._",
         "lib/win8/_._",
@@ -1060,7 +1128,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "microsoft.csharp.4.5.0.nupkg.sha512",
+        "microsoft.csharp.4.7.0.nupkg.sha512",
         "microsoft.csharp.nuspec",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
@@ -3255,14 +3323,21 @@
       "type": "project",
       "path": "../SistemaEstoque.Infra/SistemaEstoque.Infra.csproj",
       "msbuildProject": "../SistemaEstoque.Infra/SistemaEstoque.Infra.csproj"
+    },
+    "SistemaEstoque.Negocio/1.0.0": {
+      "type": "project",
+      "path": "../SistemaEstoque.Negocio/SistemaEstoque.Negocio.csproj",
+      "msbuildProject": "../SistemaEstoque.Negocio/SistemaEstoque.Negocio.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "AutoMapper.Extensions.Microsoft.DependencyInjection >= 11.0.0",
       "Microsoft.EntityFrameworkCore >= 7.0.0-preview.4.22229.2",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.0-preview.4.22229.2",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.0-preview.4.22229.2",
       "SistemaEstoque.Infra >= 1.0.0",
+      "SistemaEstoque.Negocio >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -3302,6 +3377,9 @@
           "projectReferences": {
             "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
               "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj"
+            },
+            "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj": {
+              "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj"
             }
           }
         }
@@ -3316,6 +3394,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+            "target": "Package",
+            "version": "[11.0.0, )"
+          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[7.0.0-preview.4.22229.2, )"

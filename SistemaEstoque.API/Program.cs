@@ -1,5 +1,11 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using SistemaEstoque.API.AutoMapper;
 using SistemaEstoque.Infra.Contexto;
+using SistemaEstoque.Infra.Interfaces.Repositorio;
+using SistemaEstoque.Infra.Repositorios;
+using SistemaEstoque.Negocio;
+using SistemaEstoque.Negocio.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +21,14 @@ builder.Services.AddDbContext<DbContextEstoque>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(InfraToApiMappingProfile),
+                                typeof(ApiToInfraMappingProfile));
+
+// Injenção de Dependencia
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 var app = builder.Build();
 

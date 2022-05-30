@@ -9,6 +9,7 @@ namespace SistemaEstoque.Infra.Repositorios
     {
         public CategoriaRepository(DbContextEstoque contexto) : base(contexto) {}
 
-        public async Task<IEnumerable<Categoria>> ObterCategorias() => await Db.Categorias.AsNoTracking().ToListAsync();        
+        public async Task<IEnumerable<Categoria>> ObterCategorias() => await Db.Categorias.AsNoTracking().ToListAsync();
+        public async Task<Categoria> ObterPorNome(string nomeCategoria) => await Db.Categorias.AsNoTracking().Where(c=>c.Nome == nomeCategoria).FirstOrDefaultAsync();
     }
 }

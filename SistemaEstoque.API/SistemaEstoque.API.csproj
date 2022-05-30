@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-preview.4.22229.2" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-preview.4.22229.2" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0-preview.4.22229.2">
@@ -17,11 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SistemaEstoque.Infra\SistemaEstoque.Infra.csproj" />
+    <ProjectReference Include="..\SistemaEstoque.Negocio\SistemaEstoque.Negocio.csproj" />
   </ItemGroup>
 
 </Project>

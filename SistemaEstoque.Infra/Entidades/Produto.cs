@@ -15,17 +15,17 @@ namespace SistemaEstoque.Infra.Entidades
         public string Marca { get; private set; }
         public string Modelo { get; private set; }
         public Fabricante Fabricante { get; private set; }
-        public Categoria Categoria { get; private set; }
-        public DateTime DataCadastro { get; private set; }
+        public Categoria Categoria { get; private set; }        
         public string? Imagem { get; private set; }
         public DateTime? DataVencimento { get; private set; }
+        public DateTime DataCadastro { get; private set; }
         public Usuario Usuario { get; private set; }
         public bool Ativo { get; private set; }
 
         public Produto(){}
         public Produto(string descricao, double preco, int quantidadeEstoque, string marca, string modelo,
-                       Guid fabricanteId, Guid categoriaId, DateTime dataCadastro, 
-                       DateTime? dataVencimento, string imagem, Guid usuarioId, bool activo)
+                       Guid fabricanteId, Guid categoriaId, DateTime? dataVencimento, 
+                       string imagem, Guid usuarioId, bool activo)
         {
             Descricao = descricao;
             Preco = preco;
@@ -34,8 +34,7 @@ namespace SistemaEstoque.Infra.Entidades
             Modelo = modelo;
             FabricanteId = fabricanteId;
             CategoriaId = categoriaId;
-            Imagem = imagem;
-            DataCadastro = dataCadastro;
+            Imagem = imagem;            
             DataVencimento = dataVencimento;
             UsuarioId = usuarioId;
             Ativo = activo;

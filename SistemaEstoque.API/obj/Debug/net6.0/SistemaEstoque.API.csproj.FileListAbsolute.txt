@@ -75,3 +75,7 @@ E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\obj\Debug\net6.0\
 E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\obj\Debug\net6.0\SistemaEstoque.API.pdb
 E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\obj\Debug\net6.0\SistemaEstoque.API.genruntimeconfig.cache
 E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\obj\Debug\net6.0\ref\SistemaEstoque.API.dll
+E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\bin\Debug\net6.0\SistemaEstoque.Negocio.dll
+E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\bin\Debug\net6.0\SistemaEstoque.Negocio.pdb
+E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\bin\Debug\net6.0\AutoMapper.dll
+E:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.API\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

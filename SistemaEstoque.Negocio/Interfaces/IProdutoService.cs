@@ -1,4 +1,5 @@
 ﻿using SistemaEstoque.Infra.Entidades;
+using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Negocio.Interfaces
 {
@@ -6,7 +7,8 @@ namespace SistemaEstoque.Negocio.Interfaces
     {
         Task<bool> AdicionarProduto(Produto produto);        
         Task<bool> AtualizarProduto(Produto produto);
-        Task DebitarEstoque(Guid ProdutoId, int quantidade);
-        Task ReporEstoque(Guid ProdutoId, int quantidade);
+        Task<bool> DebitarEstoque(Guid ProdutoId, int quantidade);
+        Task<bool> ReporEstoque(Guid ProdutoId, int quantidade);
+        Task MudarStatusProduto(Produto produto);
     }
 }

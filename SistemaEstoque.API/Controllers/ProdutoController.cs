@@ -63,9 +63,9 @@ namespace SistemaEstoque.API.Controllers
                 await _categoriaService.AdicionarCategoria(categoria);
                 return Ok(categoriaDto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -81,9 +81,9 @@ namespace SistemaEstoque.API.Controllers
                 await _categoriaService.AtualizarCategoria(categoria);
                 return Ok(await PegarCategoria(categoriaId));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -97,9 +97,9 @@ namespace SistemaEstoque.API.Controllers
                 await _produtoService.AdicionarProduto(produto);
                 return Ok(produto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -116,9 +116,9 @@ namespace SistemaEstoque.API.Controllers
                 produto.AlterarCategoria(categoria);                
                 return Ok(produto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -134,9 +134,9 @@ namespace SistemaEstoque.API.Controllers
                 produto.AlterarDescricao(descricaoProduto);
                 return Ok(_mapper.Map<ProdutoDto>(produto));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -152,9 +152,9 @@ namespace SistemaEstoque.API.Controllers
                 await _produtoService.MudarStatusProduto(produto);
                 return Ok(await PegarProduto(produtoId));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -170,9 +170,9 @@ namespace SistemaEstoque.API.Controllers
                 await _produtoService.AtualizarProduto(produto);
                 return Ok(produto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -189,9 +189,9 @@ namespace SistemaEstoque.API.Controllers
 
                 return BadRequest("Quantidade inválida");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -208,9 +208,9 @@ namespace SistemaEstoque.API.Controllers
 
                 return BadRequest(new ProdutoErrorInfo(produto.QuantidadeEstoque,quantidade));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }       
 

@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SistemaEstoque.Infra.Entidades;
 
 namespace SistemaEstoque.Infra.Contexto
 {
     public class DbContextEstoque : DbContext
     {
-        public DbContextEstoque(DbContextOptions options) : base(options)
+        public DbContextEstoque(DbContextOptions<DbContextEstoque> options) : base(options)
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.AutoDetectChangesEnabled = false;
@@ -21,6 +21,9 @@ namespace SistemaEstoque.Infra.Contexto
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            
             foreach (var property in modelBuilder.Model.GetEntityTypes()
                 .SelectMany(e => e.GetProperties()
                     .Where(p => p.ClrType == typeof(string))))

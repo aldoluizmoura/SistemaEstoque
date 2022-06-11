@@ -1,5 +1,5 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using SistemaEstoque.API.Autenticação;
 using SistemaEstoque.API.AutoMapper;
 using SistemaEstoque.Infra.Contexto;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
@@ -13,16 +13,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Banco de dados config
 
-builder.Services.AddDbContext<DbContextEstoque>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<DbContextEstoque>(options => 
+                              options.UseSqlServer(builder.Configuration
+                              .GetConnectionString("DefaultConnection")));
 
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                              options.UseSqlServer(builder.Configuration
+                              .GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(InfraToApiMappingProfile),
-                                typeof(ApiToInfraMappingProfile));
+                               typeof(ApiToInfraMappingProfile));
 
 // Injenção de Dependencia
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
@@ -36,8 +40,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseSwaggerUI();}
 
 app.UseHttpsRedirection();
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaEstoque.API.DTOs;
 using SistemaEstoque.API.ErroModels;
@@ -9,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutoController : ControllerBase
@@ -40,6 +42,13 @@ namespace SistemaEstoque.API.Controllers
             return Ok(produtos);
         }
 
+        [HttpGet("pegar-produto-por-id")]
+        public async Task<IActionResult> PegarProdutoPorId(Guid ProdutoId)
+        {
+            var produto = await _produtoRepository.ObterPorId(ProdutoId);
+            return Ok(produto);
+        }
+
         [HttpGet("obter-produtos-por-categoria")]
         public async Task<IActionResult> obterProdutosCategoria(Guid CategoriaId)
         {
@@ -69,7 +78,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("atualizar-categoria")]
+        [HttpPut("atualizar-categoria")]
         public async Task<IActionResult> atualizarCategoria(Guid categoriaId)
         {
             var categoria = await PegarCategoria(categoriaId);
@@ -103,7 +112,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("alterar-categoria-produto")]
+        [HttpPut("alterar-categoria-produto")]
         public async Task<IActionResult> alterarCategoriaProduto([Required] Guid produtoId, string nomeCategoria)
         {
             var produto = await PegarProduto(produtoId);
@@ -122,7 +131,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("alterar-descricao-produto")]
+        [HttpPut("alterar-descricao-produto")]
         public async Task<IActionResult> alteraDescricaoProduto([Required] Guid produtoId, string descricaoProduto)
         {
             var produto = await PegarProduto(produtoId);
@@ -140,7 +149,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("mudar-status-produto")]
+        [HttpPut("mudar-status-produto")]
         public async Task<IActionResult> mudarStatusProduto([Required] Guid produtoId)
         {
             var produto = await PegarProduto(produtoId);
@@ -158,7 +167,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("alterar-produto")]
+        [HttpPut("alterar-produto")]
         public async Task<IActionResult> alterarProduto([Required] Guid produtoId, ProdutoDto produtoDto)
         {
             var produto = await PegarProduto(produtoId);
@@ -176,7 +185,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("repor-estoque")]
+        [HttpPut("repor-estoque")]
         public async Task<IActionResult> reporEstoque([Required] Guid produtoId, [Required] int quantidade)
         {
             var produto = await PegarProduto(produtoId);
@@ -195,7 +204,7 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
-        [HttpPost("debitar-estoque")]
+        [HttpPut("debitar-estoque")]
         public async Task<IActionResult> debitarEstoque([Required] Guid produtoId, [Required] int quantidade)
         {
             var produto = await PegarProduto(produtoId);

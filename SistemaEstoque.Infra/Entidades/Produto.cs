@@ -5,21 +5,23 @@ using SistemaEstoque.Infra.Interfaces;
 namespace SistemaEstoque.Infra.Entidades
 {
     public class Produto : Entity, IAggregateRoot
-    {
-        public Guid CategoriaId { get; private set; }
-        public Guid FabricanteId { get; private set; }
-        public Guid UsuarioId { get; private set; }
+    {   
         public string Descricao { get; private set; }
         public double Preco { get; private set; }
         public int QuantidadeEstoque { get; private set; }
         public string Marca { get; private set; }
         public string Modelo { get; private set; }
-        public Fabricante Fabricante { get; private set; }
-        public Categoria Categoria { get; private set; }        
         public string? Imagem { get; private set; }
         public DateTime? DataVencimento { get; private set; }
         public DateTime DataCadastro { get; private set; }
+
+        //ER Relations
+        public Fabricante Fabricante { get; private set; }
+        public Guid FabricanteId { get; private set; }
+        public Categoria Categoria { get; private set; }
+        public Guid CategoriaId { get; private set; }
         public Usuario Usuario { get; private set; }
+        public Guid UsuarioId { get; private set; }
         public bool Ativo { get; private set; }
 
         public Produto(){}

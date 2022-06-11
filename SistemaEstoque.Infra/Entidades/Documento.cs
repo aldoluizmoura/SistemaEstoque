@@ -9,20 +9,20 @@ namespace SistemaEstoque.Infra.Entidades
         public string Numero { get; private set; }
 
         //EF relations
-        public Fabricante Fabricante { get; set; }       
-        public Usuario Usuario { get; set; }        
+        public Fabricante Fabricante { get; set; }
+        public Usuario Usuario { get; set; }
 
-        public Documento(){}
+        public Documento() { }
 
         public Documento(string numero)
         {
-           if (Validar(numero))
+            if (Validar(numero))
             {
                 Numero = numero;
                 Tipo = DefinirTipoDocumento(numero);
             }
 
-            throw new Exception("Documento inválido");            
+            throw new Exception("Documento inválido");
         }
 
         public TipoDocumento DefinirTipoDocumento(string numero)
@@ -35,7 +35,7 @@ namespace SistemaEstoque.Infra.Entidades
         private static bool Validar(string cpfCnpj)
         {
             return (CpfCnpjValidation.IsCpf(cpfCnpj) || CpfCnpjValidation.IsCnpj(cpfCnpj));
-        }      
+        }
 
     }
 }

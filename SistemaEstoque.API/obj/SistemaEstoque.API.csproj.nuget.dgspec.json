@@ -1,43 +1,42 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj": {}
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj": {}
   },
   "projects": {
-    "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj": {
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj",
+        "projectUniqueName": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj",
         "projectName": "SistemaEstoque.API",
-        "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj",
-        "packagesPath": "C:\\Users\\AldoLuiz\\.nuget\\packages\\",
-        "outputPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\obj\\",
+        "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\SistemaEstoque.API.csproj",
+        "packagesPath": "C:\\Users\\aldol\\.nuget\\packages\\",
+        "outputPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\AldoLuiz\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\aldol\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform.Test/nuget/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform/nuget/v3/index.json": {},
+          "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
-                "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj"
+              "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
+                "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj"
               },
-              "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj": {
-                "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj"
+              "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj": {
+                "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj"
               }
             }
           }
@@ -56,19 +55,39 @@
               "target": "Package",
               "version": "[11.0.0, )"
             },
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.4.4, )"
+            },
+            "Microsoft.AspNetCore.Authentication": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.2, )"
+              "version": "[6.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.2, )"
+              "version": "[6.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.2, )"
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[6.0.5, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -97,30 +116,29 @@
         }
       }
     },
-    "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
+        "projectUniqueName": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
         "projectName": "SistemaEstoque.Infra",
-        "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
-        "packagesPath": "C:\\Users\\AldoLuiz\\.nuget\\packages\\",
-        "outputPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\obj\\",
+        "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
+        "packagesPath": "C:\\Users\\aldol\\.nuget\\packages\\",
+        "outputPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\AldoLuiz\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\aldol\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform.Test/nuget/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform/nuget/v3/index.json": {},
+          "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "net6.0": {
@@ -138,13 +156,31 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.4.4, )"
+            },
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.2, )"
+              "version": "[6.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.2, )"
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.5, )"
             }
           },
           "imports": [
@@ -166,37 +202,36 @@
         }
       }
     },
-    "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj": {
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj",
+        "projectUniqueName": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj",
         "projectName": "SistemaEstoque.Negocio",
-        "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj",
-        "packagesPath": "C:\\Users\\AldoLuiz\\.nuget\\packages\\",
-        "outputPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\obj\\",
+        "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\SistemaEstoque.Negocio.csproj",
+        "packagesPath": "C:\\Users\\aldol\\.nuget\\packages\\",
+        "outputPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Negocio\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\AldoLuiz\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\aldol\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform.Test/nuget/v3/index.json": {},
+          "https://uux.pkgs.visualstudio.com/_packaging/TvOpenPlatform/nuget/v3/index.json": {},
+          "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
-                "projectPath": "E:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj"
+              "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
+                "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj"
               }
             }
           }

@@ -1,10 +1,10 @@
 ﻿using SistemaEstoque.Infra.Entidades.Validações;
+using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Infra.Entidades
 {
     public class Endereco : Entity
     {
-        public Guid UsuarioId { get; set; }
         public string Logradouro { get; set; }
         public string Numero { get; set; }
         public string? Complemento { get; set; }
@@ -12,7 +12,10 @@ namespace SistemaEstoque.Infra.Entidades
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+
+        // ER Relations
         public Usuario Usuario { get; set; }
+        public Guid UsuarioId { get; set; }
 
         protected Endereco(){}
 

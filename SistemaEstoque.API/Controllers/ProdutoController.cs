@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaEstoque.API.DTOs;
-using SistemaEstoque.API.ErroModels;
+using SistemaEstoque.API.Validations;
 using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;

@@ -32,7 +32,8 @@ namespace SistemaEstoque.Infra.Entidades
             DataNascimento = dataNascimento;
             Ativo = ativo;
             Telefone = telefone;            
-            Email = email;   
+            Email = email;
+            UserName = email;
 
             Validar();            
         }

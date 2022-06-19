@@ -44,9 +44,9 @@ namespace SistemaEstoque.Infra.Repositorios
             await SaveChanges();
         }
 
-        public async Task Remover(Guid id)
+        public async Task Remover(T entity)
         {
-            Dbset.Remove(new T { Id = id });
+            Dbset.Remove(entity);
             await SaveChanges();
         }
 

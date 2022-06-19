@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {}
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {}
   },
   "projects": {
-    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
+    "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
+        "projectUniqueName": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
         "projectName": "SistemaEstoque.Infra",
-        "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
+        "projectPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque.Infra\\SistemaEstoque.Infra.csproj",
         "packagesPath": "C:\\Users\\aldol\\.nuget\\packages\\",
-        "outputPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque\\SistemaEstoque.Infra\\obj\\",
+        "outputPath": "D:\\Estudos\\c#\\SistemaEstoque\\SistemaEstoque.Infra\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aldol\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -44,21 +44,9 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
-            "EntityFramework": {
-              "target": "Package",
-              "version": "[6.4.4, )"
-            },
             "FluentValidation": {
               "target": "Package",
               "version": "[11.0.2, )"
-            },
-            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[6.0.5, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[6.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -69,6 +57,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.5, )"
+            },
+            "Microsoft.Extensions.Identity.Stores": {
+              "target": "Package",
+              "version": "[6.0.6, )"
             }
           },
           "imports": [

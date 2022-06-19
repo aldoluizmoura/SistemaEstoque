@@ -16,13 +16,13 @@ namespace SistemaEstoque.Infra.Entidades
 
         public Documento(string numero)
         {
-            if (Validar(numero))
+            if (!Validar(numero))
             {
-                Numero = numero;
-                Tipo = DefinirTipoDocumento(numero);
+                throw new Exception("Documento inválido");
             }
 
-            throw new Exception("Documento inválido");
+            Numero = numero;
+            Tipo = DefinirTipoDocumento(numero);
         }
 
         public TipoDocumento DefinirTipoDocumento(string numero)

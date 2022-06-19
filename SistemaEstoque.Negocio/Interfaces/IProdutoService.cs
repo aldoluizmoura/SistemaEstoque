@@ -1,5 +1,4 @@
 ﻿using SistemaEstoque.Infra.Entidades;
-using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Negocio.Interfaces
 {

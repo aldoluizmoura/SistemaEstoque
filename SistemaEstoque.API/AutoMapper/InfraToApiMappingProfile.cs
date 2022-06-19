@@ -10,6 +10,8 @@ namespace SistemaEstoque.API.AutoMapper
         {
             CreateMap<Produto, ProdutoDto>();
             CreateMap<Categoria, CategoriaDto>();
+            CreateMap<Documento, DocumentoDTO>();
+            CreateMap<Usuario, RegistroUsuarioDTO>();
         }
     }
 }

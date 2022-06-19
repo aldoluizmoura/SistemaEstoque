@@ -26,3 +26,17 @@ D:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.
 D:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.pdb
 D:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.genruntimeconfig.cache
 D:\Estudos\c#\SistemaEstoque\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\ref\SistemaEstoque.Infra.dll
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\bin\Debug\net6.0\SistemaEstoque.Infra.deps.json
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\bin\Debug\net6.0\SistemaEstoque.Infra.runtimeconfig.json
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\bin\Debug\net6.0\SistemaEstoque.Infra.dll
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\bin\Debug\net6.0\SistemaEstoque.Infra.pdb
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.csproj.AssemblyReference.cache
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.GeneratedMSBuildEditorConfig.editorconfig
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.AssemblyInfoInputs.cache
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.AssemblyInfo.cs
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.csproj.CoreCompileInputs.cache
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.dll
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\refint\SistemaEstoque.Infra.dll
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.pdb
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\SistemaEstoque.Infra.genruntimeconfig.cache
+D:\Estudos\c#\SistemaEstoque\SistemaEstoque.Infra\obj\Debug\net6.0\ref\SistemaEstoque.Infra.dll

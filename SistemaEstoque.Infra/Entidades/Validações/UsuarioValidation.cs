@@ -14,11 +14,6 @@ namespace SistemaEstoque.Infra.Entidades.Validações
             .MinimumLength(3).WithMessage("O nome deve ter no mínimo 3 caracteres")
             .MaximumLength(80).WithMessage("O nome deve ter no máximo 80 caracteres");
 
-            RuleFor(x => x.PasswordHash).NotNull().WithMessage("A senha não pode ser vázia.")
-            .NotEmpty().WithMessage("A senha não pode ser nula")
-            .MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres")
-            .MaximumLength(30).WithMessage("A senha deve ter no máximo 30 caracteres");
-
             RuleFor(x => x.Email).NotNull().WithMessage("o e-mail não pode ser nulo.")
                 .NotEmpty().WithMessage("o e-mail não pode ser vázio")
                 .MinimumLength(10).WithMessage("o e-mail tem que ter no mínimo 10 caracteres")

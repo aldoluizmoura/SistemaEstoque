@@ -7,7 +7,8 @@ namespace SistemaEstoque.API.Autenticação
 {
     public class ApplicationDbContext : IdentityDbContext<Usuario>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> modelBuilder) : base(modelBuilder)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> modelBuilder) 
+            : base(modelBuilder)
         {
         }
 

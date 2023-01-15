@@ -19,6 +19,7 @@ namespace SistemaEstoque.API.Controllers
         private readonly INotificador _notificador;
         private readonly IDocumentoService _documentoService;
         private readonly IUsuarioService _usuarioService;
+        
         public AuthController(SignInManager<Usuario> signInManager,
                                UserManager<Usuario> userManager, 
                                IMapper mapper, INotificador notificador,
@@ -74,8 +75,5 @@ namespace SistemaEstoque.API.Controllers
         {
             return _mapper.Map<Documento>(documentoDto);                        
         }
-
-        
-
     }
 }

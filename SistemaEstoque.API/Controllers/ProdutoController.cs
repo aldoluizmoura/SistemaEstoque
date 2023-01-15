@@ -19,8 +19,7 @@ namespace SistemaEstoque.API.Controllers
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly IProdutoService _produtoService;
         private readonly ICategoriaService _categoriaService;
-        private readonly IMapper _mapper;
-        
+        private readonly IMapper _mapper;        
         
         public ProdutoController(IProdutoRepository produtoRepository, 
                                  IProdutoService produtoService,

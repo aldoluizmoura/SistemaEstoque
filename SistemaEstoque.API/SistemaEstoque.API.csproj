@@ -27,4 +27,8 @@
     <ProjectReference Include="..\SistemaEstoque.Negocio\SistemaEstoque.Negocio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

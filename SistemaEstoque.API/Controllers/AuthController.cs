@@ -1,11 +1,18 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SistemaEstoque.API.DTOs;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using SistemaEstoque.API.Models;
 using SistemaEstoque.API.Validations;
 using SistemaEstoque.Infra.Entidades;
+using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Negocio.Interfaces;
 using SistemaEstoque.Negocio.Notificacões;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
+using System.Text;
 
 namespace SistemaEstoque.API.Controllers
 {
@@ -15,16 +22,19 @@ namespace SistemaEstoque.API.Controllers
     {
         private readonly SignInManager<Usuario> _signInManager;
         private readonly UserManager<Usuario> _userManager;
-        private readonly IMapper _mapper;        
+        private readonly IMapper _mapper;
         private readonly INotificador _notificador;
         private readonly IDocumentoService _documentoService;
         private readonly IUsuarioService _usuarioService;
-        
+        private readonly AppSettings _appSettings;
+
         public AuthController(SignInManager<Usuario> signInManager,
-                               UserManager<Usuario> userManager, 
-                               IMapper mapper, INotificador notificador,
-                               IDocumentoService documentoService, 
-                               IUsuarioService usuarioService)
+                               UserManager<Usuario> userManager,
+                               IMapper mapper,
+                               INotificador notificador,
+                               IDocumentoService documentoService,
+                               IUsuarioService usuarioService,
+                               IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -32,36 +42,73 @@ namespace SistemaEstoque.API.Controllers
             _notificador = notificador;
             _documentoService = documentoService;
             _usuarioService = usuarioService;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("cadastrar-usuario")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> CadastrarUsuario(RegistroUsuarioDTO registroUsuarioDTO)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
             await ValidarCadastro(registroUsuarioDTO);
 
-            if (_notificador.TemNotificacao()) return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
-
-            var usuario = _mapper.Map<Usuario>(registroUsuarioDTO);            
-
-            var result = await _userManager.CreateAsync(usuario, registroUsuarioDTO.Senha);
-
-            if (result.Succeeded)
+            try
             {
-                return Ok("Usuário Cadastrado com Sucesso!");
+                CapitalizarNome(registroUsuarioDTO);
+
+                var usuario = _mapper.Map<Usuario>(registroUsuarioDTO);
+
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                var result = await _userManager.CreateAsync(usuario, registroUsuarioDTO.Senha);
+
+                if (!result.Succeeded)
+                {
+                    var documento = PegarDocumento(registroUsuarioDTO.Documento);
+                    await _documentoService.ExcluirDocumento(documento);
+
+                    foreach (var item in result.Errors)
+                    {
+                        var notificacao = new Notificacao(item.Description);
+                        _notificador.AdicionarNotificacao(notificacao);
+                    }
+
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+                }
+
+                await _signInManager.SignInAsync(usuario, false);
+                return Ok(new ResponseModel(await GerarJwt(usuario.Email), new {usuario.Nome, usuario.Email}));
             }
-
-            var documento = PegarDocumento(registroUsuarioDTO.Documento);
-            await _documentoService.ExcluirDocumento(documento);
-
-            foreach (var item in result.Errors)
-            {                
-                var notificacao = new Notificacao(item.Description);
-                _notificador.AdicionarNotificacao(notificacao);
+            catch (EntidadeExcepetions ex)
+            {
+                return BadRequest(ex.Message);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-            return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));           
+        [HttpPost("entrar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<ActionResult> Login(LoginDTO login)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+
+            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, false, true);
+
+            if (!result.Succeeded)
+                return BadRequest("Login não realizado");
+
+            return Ok(new ResponseModel(await GerarJwt(login.Email), new { login.Email}));
         }
 
         private async Task ValidarCadastro(RegistroUsuarioDTO registroUsuarioDTO)
@@ -73,7 +120,31 @@ namespace SistemaEstoque.API.Controllers
 
         private Documento PegarDocumento(DocumentoDTO documentoDto)
         {
-            return _mapper.Map<Documento>(documentoDto);                        
+            return _mapper.Map<Documento>(documentoDto);
+        }
+
+        private string CapitalizarNome(RegistroUsuarioDTO registroUsuarioDTO) 
+        {
+            registroUsuarioDTO.Nome = CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(registroUsuarioDTO.Nome);
+            return registroUsuarioDTO.Nome;
+        }
+
+        private async Task<string> GerarJwt(string email)
+        {
+            var usuario = await _userManager.FindByEmailAsync(email);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _appSettings.Emissor,
+                Audience = _appSettings.ValidoEm,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SistemaEstoque.API.DTOs;
+using SistemaEstoque.API.Models;
 using SistemaEstoque.Infra.Entidades;
 
 namespace SistemaEstoque.API.AutoMapper
@@ -21,8 +21,7 @@ namespace SistemaEstoque.API.AutoMapper
                .ConstructUsing(d => new Documento(d.Numero));
 
             CreateMap<RegistroUsuarioDTO, Usuario>()
-               .ConstructUsing(u => new Usuario(u.Nome, new Documento(u.Documento.Numero), u.DataNascimento, u.Ativo, u.Telefone, u.Email));
+               .ConstructUsing(u => new Usuario(u.Nome, new Documento(u.Documento.Numero), u.DataNascimento, u.Telefone, u.Email));
         }
-
     }
 }

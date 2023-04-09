@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SistemaEstoque.API.DTOs;
+using SistemaEstoque.API.Models;
 using SistemaEstoque.Infra.Entidades;
 
 namespace SistemaEstoque.API.AutoMapper

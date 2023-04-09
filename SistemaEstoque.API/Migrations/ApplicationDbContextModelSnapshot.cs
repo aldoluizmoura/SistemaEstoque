@@ -17,7 +17,7 @@ namespace SistemaEstoque.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -46,7 +46,7 @@ namespace SistemaEstoque.API.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Papeis", (string)null);
+                    b.ToTable("Papel", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -96,7 +96,7 @@ namespace SistemaEstoque.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Claims", (string)null);
+                    b.ToTable("Claim", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -118,7 +118,7 @@ namespace SistemaEstoque.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Logins", (string)null);
+                    b.ToTable("Login", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>

@@ -23,7 +23,6 @@ namespace SistemaEstoque.Infra.Entidades
         private void Validar()
         {
             Validacoes.ValidarSeVazio(Nome, "Nome do Fabricante não pode ser vázio");            
-        }
-        
+        }        
     }
 }

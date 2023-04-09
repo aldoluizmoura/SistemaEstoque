@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SistemaEstoque.API.DTOs;
+using SistemaEstoque.API.Models;
 using SistemaEstoque.API.Validations;
 using SistemaEstoque.Infra.Entidades;
+using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 
 namespace SistemaEstoque.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -35,13 +38,17 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [HttpGet("listar-produtos")]
-        public async Task<IActionResult> listarProdutos()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ListarProdutos()
         {
             var produtos = await _produtoRepository.ObterProdutos();
             return Ok(produtos);
         }
 
         [HttpGet("pegar-produto-por-id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> PegarProdutoPorId(Guid ProdutoId)
         {
             var produto = await _produtoRepository.ObterPorId(ProdutoId);
@@ -49,70 +56,96 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [HttpGet("obter-produtos-por-categoria")]
-        public async Task<IActionResult> obterProdutosCategoria(Guid CategoriaId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ObterProdutosCategoria(Guid CategoriaId)
         {
             var produtos = await _produtoRepository.ObterProdutosPorCategorias(CategoriaId);
             return Ok(produtos);
         }
 
         [HttpGet("listar-categorias")]
-        public async Task<IActionResult> listarCategorias()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ListarCategorias()
         {
             var categorias = await _categoriaRepository.ObterCategorias();
             return Ok(categorias);
         }
 
         [HttpPost("adicionar-categoria")]
-        public async Task<IActionResult> adicionarCategoria(CategoriaDto categoriaDto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> AdicionarCategoria(CategoriaDto categoriaDto)
         {
             var categoria = _mapper.Map<Categoria>(categoriaDto);
             try
             {
                 await _categoriaService.AdicionarCategoria(categoria);
-                return Ok(categoriaDto);
+                return CreatedAtAction(nameof(AdicionarCategoria), new { categoria.Nome });
             }
-            catch (Exception e)
+            catch (EntidadeExcepetions ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("atualizar-categoria")]
-        public async Task<IActionResult> atualizarCategoria(Guid categoriaId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> AtualizarCategoria(Guid categoriaId)
         {
             var categoria = await PegarCategoria(categoriaId);
 
-            if (categoria is null) return BadRequest("Categoria não encontrada");
+            if (categoria is null) 
+                return BadRequest("Categoria não encontrada");
 
             try
             {
                 await _categoriaService.AtualizarCategoria(categoria);
                 return Ok(await PegarCategoria(categoriaId));
             }
-            catch (Exception e)
+            catch (EntidadeExcepetions ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost("adicionar-produtos")]
-        public async Task<IActionResult> adicionarProdutos(ProdutoDto produtoDto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> AdicionarProdutos(ProdutoDto produtoDto)
         {
             var produto = _mapper.Map<Produto>(produtoDto);
 
             try
             {
                 await _produtoService.AdicionarProduto(produto);
-                return Ok(produto);
+                return CreatedAtAction(nameof(AdicionarProdutos), new { produto.Modelo });
             }
-            catch (Exception e)
+            catch (EntidadeExcepetions ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("alterar-categoria-produto")]
-        public async Task<IActionResult> alterarCategoriaProduto([Required] Guid produtoId, string nomeCategoria)
+        public async Task<IActionResult> AlterarCategoriaProduto([Required] Guid produtoId, string nomeCategoria)
         {
             var produto = await PegarProduto(produtoId);
             var categoria = await _categoriaRepository.ObterPorNome(nomeCategoria);
@@ -131,7 +164,7 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [HttpPut("alterar-descricao-produto")]
-        public async Task<IActionResult> alteraDescricaoProduto([Required] Guid produtoId, string descricaoProduto)
+        public async Task<IActionResult> AlteraDescricaoProduto([Required] Guid produtoId, string descricaoProduto)
         {
             var produto = await PegarProduto(produtoId);
 
@@ -149,7 +182,7 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [HttpPut("mudar-status-produto")]
-        public async Task<IActionResult> mudarStatusProduto([Required] Guid produtoId)
+        public async Task<IActionResult> MudarStatusProduto([Required] Guid produtoId)
         {
             var produto = await PegarProduto(produtoId);
 
@@ -167,25 +200,26 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [HttpPut("alterar-produto")]
-        public async Task<IActionResult> alterarProduto([Required] Guid produtoId, ProdutoDto produtoDto)
+        public async Task<IActionResult> AlterarProduto([Required] Guid produtoId, ProdutoDto produtoDto)
         {
             var produto = await PegarProduto(produtoId);
 
-            if (produto is null) return BadRequest("Produto não encontrado");
+            if (produto is null) 
+                return BadRequest("Produto não encontrado");
 
             try
             {
                 await _produtoService.AtualizarProduto(produto);
                 return Ok(produto);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("repor-estoque")]
-        public async Task<IActionResult> reporEstoque([Required] Guid produtoId, [Required] int quantidade)
+        public async Task<IActionResult> ReporEstoque([Required] Guid produtoId, [Required] int quantidade)
         {
             var produto = await PegarProduto(produtoId);
 
@@ -193,32 +227,35 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                if(await _produtoService.ReporEstoque(produto.Id, quantidade)) return Ok(await PegarProduto(produtoId));
+                if(await _produtoService.ReporEstoque(produto.Id, quantidade)) 
+                    return Ok(await PegarProduto(produtoId));
 
                 return BadRequest("Quantidade inválida");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("debitar-estoque")]
-        public async Task<IActionResult> debitarEstoque([Required] Guid produtoId, [Required] int quantidade)
+        public async Task<IActionResult> DebitarEstoque([Required] Guid produtoId, [Required] int quantidade)
         {
             var produto = await PegarProduto(produtoId);
 
-            if (produto is null) return BadRequest("Produto não encontrado");
+            if (produto is null) 
+                return BadRequest("Produto não encontrado");
 
             try
             {
-                if(await _produtoService.DebitarEstoque(produto.Id, quantidade)) return Ok(await PegarProduto(produtoId));
+                if(await _produtoService.DebitarEstoque(produto.Id, quantidade)) 
+                    return Ok(await PegarProduto(produtoId));
 
                 return BadRequest(new ProdutoErrorInfo(produto.QuantidadeEstoque,quantidade));
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
+            catch (Exception ex) 
+            { 
+                return BadRequest(ex.Message); 
             }
         }       
 

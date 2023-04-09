@@ -21,10 +21,9 @@ namespace SistemaEstoque.API.Autenticação
                 .HasColumnName("UsuarioId");
 
             builder.Entity<IdentityUserRole<string>>().ToTable("UsuarioPapel");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("Logins");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("Claims");
-            builder.Entity<IdentityRole>().ToTable("Papeis");
-
+            builder.Entity<IdentityUserLogin<string>>().ToTable("Login");
+            builder.Entity<IdentityUserClaim<string>>().ToTable("Claim");
+            builder.Entity<IdentityRole>().ToTable("Papel");
         }
     }
 }

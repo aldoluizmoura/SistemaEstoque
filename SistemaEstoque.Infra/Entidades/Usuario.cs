@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
+using System.Globalization;
 
 namespace SistemaEstoque.Infra.Entidades
 {
@@ -23,20 +24,20 @@ namespace SistemaEstoque.Infra.Entidades
 
         protected Usuario() { }
         public Usuario(string nome, Documento documento, 
-                        DateTime dataNascimento, bool ativo,
+                        DateTime dataNascimento,
                         string telefone, string email)
         {
             UsuarioId = Guid.NewGuid();
             Nome = nome;
             Documento = documento;
             DataNascimento = dataNascimento;
-            Ativo = ativo;
+            Ativo = true;
             Telefone = telefone;            
             Email = email;
             UserName = email;
 
             Validar();            
-        }
+        }      
 
         public bool Ativar() => Ativo = true;
         public bool Desativar() => Ativo = false;
@@ -51,10 +52,9 @@ namespace SistemaEstoque.Infra.Entidades
                 foreach (var item in validacao.Errors)
                 {
                     _errors.Add(item.ErrorMessage);
-
                     throw new EntidadeExcepetions($"{_errors}");
                 }
             }
-        }
+        }       
     }
 }

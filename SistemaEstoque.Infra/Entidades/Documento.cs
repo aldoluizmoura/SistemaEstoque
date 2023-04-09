@@ -1,5 +1,6 @@
 ﻿using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Enums;
+using SistemaEstoque.Infra.Exceptions;
 
 namespace SistemaEstoque.Infra.Entidades
 {
@@ -16,10 +17,8 @@ namespace SistemaEstoque.Infra.Entidades
 
         public Documento(string numero)
         {
-            if (!Validar(numero))
-            {
-                throw new Exception("Documento inválido");
-            }
+            if (!Validar(numero)) 
+                throw new EntidadeExcepetions("Documento inválido");
 
             Numero = numero;
             Tipo = DefinirTipoDocumento(numero);
@@ -27,15 +26,15 @@ namespace SistemaEstoque.Infra.Entidades
 
         public TipoDocumento DefinirTipoDocumento(string numero)
         {
-            if (CpfCnpjValidation.IsCpf(numero)) return TipoDocumento.CPF;
+            if (CpfCnpjValidation.IsCpf(numero)) 
+                return TipoDocumento.CPF;
 
             return TipoDocumento.CNPJ;
         }
 
         private static bool Validar(string cpfCnpj)
         {
-            return (CpfCnpjValidation.IsCpf(cpfCnpj) || CpfCnpjValidation.IsCnpj(cpfCnpj));
+            return CpfCnpjValidation.IsCpf(cpfCnpj) || CpfCnpjValidation.IsCnpj(cpfCnpj);
         }
-
     }
 }

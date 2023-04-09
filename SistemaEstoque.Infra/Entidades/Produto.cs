@@ -40,6 +40,8 @@ namespace SistemaEstoque.Infra.Entidades
             DataVencimento = dataVencimento;
             UsuarioId = usuarioId;
             Ativo = activo;
+
+            Validar();
         }
 
         public void Ativar() => Ativo = true;
@@ -52,6 +54,13 @@ namespace SistemaEstoque.Infra.Entidades
             CategoriaId = categoria.Id;
         }
 
+        private void Validar()
+        {
+            Validacoes.ValidarSeVazio(Descricao, "O campo Nome não pode ser vázio");
+            Validacoes.ValidarSeVazio(Modelo, "O campo Nome não pode ser vázio");
+            Validacoes.ValidarSeVazio(Marca, "O campo Nome não pode ser vázio");            
+        }
+
         public void AlterarDescricao(string descricao)
         {
             Validacoes.ValidarSeVazio(descricao, "O campo Descrição não pode estar vazio");
@@ -62,7 +71,9 @@ namespace SistemaEstoque.Infra.Entidades
         {
             if (quantidade < 0) quantidade *= -1;
 
-            if (!PossuiEstoque(quantidade)) throw new EntidadeExcepetions("Estoque insuficiente");
+            if (!PossuiEstoque(quantidade)) 
+                throw new EntidadeExcepetions("Estoque insuficiente");
+
             QuantidadeEstoque -= quantidade;
         }
 

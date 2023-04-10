@@ -82,7 +82,7 @@ namespace SistemaEstoque.API.Controllers
                 }
 
                 await _signInManager.SignInAsync(usuario, false);
-                return Ok(new ResponseModel(await GerarJwt(usuario.Email), new {usuario.Nome, usuario.Email}));
+                return Ok(new TokenModel(await GerarJwt(usuario.Email), DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
             }
             catch (EntidadeExcepetions ex)
             {
@@ -108,7 +108,7 @@ namespace SistemaEstoque.API.Controllers
             if (!result.Succeeded)
                 return BadRequest("Login não realizado");
 
-            return Ok(new ResponseModel(await GerarJwt(login.Email), new { login.Email}));
+            return Ok(new TokenModel(await GerarJwt(login.Email), DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
         }
 
         private async Task ValidarCadastro(RegistroUsuarioDTO registroUsuarioDTO)

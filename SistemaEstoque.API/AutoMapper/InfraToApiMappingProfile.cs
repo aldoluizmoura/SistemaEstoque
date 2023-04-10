@@ -12,6 +12,7 @@ namespace SistemaEstoque.API.AutoMapper
             CreateMap<Categoria, CategoriaDto>();
             CreateMap<Documento, DocumentoDTO>();
             CreateMap<Usuario, RegistroUsuarioDTO>();
+            CreateMap<Fabricante, FabricanteDTO>().ReverseMap();
         }
     }
 }

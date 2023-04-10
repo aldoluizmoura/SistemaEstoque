@@ -10,7 +10,7 @@ namespace SistemaEstoque.API.AutoMapper
         {
             CreateMap<ProdutoDto, Produto>()
                 .ConstructUsing(p =>
-                new Produto(p.Descricao, p.Preco, p.QuantidadeEstoque, p.Marca,
+                new Produto(p.Descricao, p.Codigo, p.Preco, p.QuantidadeEstoque, p.Marca,
                 p.Modelo, p.FabricanteId, p.CategoriaId, p.DataVencimento,
                 p.Imagem, p.UsuarioId, p.Ativo));
 
@@ -21,7 +21,10 @@ namespace SistemaEstoque.API.AutoMapper
                .ConstructUsing(d => new Documento(d.Numero));
 
             CreateMap<RegistroUsuarioDTO, Usuario>()
-               .ConstructUsing(u => new Usuario(u.Nome, new Documento(u.Documento.Numero), u.DataNascimento, u.Telefone, u.Email));
+               .ConstructUsing(u => new Usuario(u.Nome, u.Matricula, new Documento(u.Documento.Numero), u.DataNascimento, u.Telefone, u.Email));
+
+            CreateMap<FabricanteDTO, Fabricante>()
+              .ConstructUsing(f => new Fabricante(f.Nome, f.Codigo, new Documento(f.Documento.Numero), f.UsuarioId));
         }
     }
 }

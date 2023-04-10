@@ -151,6 +151,6 @@ namespace SistemaEstoque.Infra.Entidades.Validações
             {
                 throw new EntidadeExcepetions(mensagem);
             }
-        }
+        }        
     }
 }

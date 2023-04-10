@@ -87,6 +87,9 @@ builder.Services.AddScoped<IDocumentoService, DocumentoService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
+builder.Services.AddScoped<IFabricanteRepository, FabricanteRepository>();
+builder.Services.AddScoped<IFabricanteService, FabricanteService>();
+
 builder.Services.AddScoped<INotificador, Notificador>();
 
 //JWT

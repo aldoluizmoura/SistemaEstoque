@@ -13,7 +13,8 @@ namespace SistemaEstoque.Infra.Mappings
             builder.Property(p => p.Marca).IsRequired().HasColumnType("varchar(250)");
             builder.Property(p => p.Modelo).IsRequired().HasColumnType("varchar(250)");
             builder.Property(p => p.Preco).IsRequired();
-            builder.Property(p => p.Ativo).IsRequired();            
+            builder.Property(p => p.Ativo).IsRequired();
+            builder.Property(p => p.FabricanteId).IsRequired();            
 
             builder.ToTable("Produto");
         }

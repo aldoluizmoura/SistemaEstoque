@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaEstoque.Infra.Contexto;
 
@@ -11,9 +12,10 @@ using SistemaEstoque.Infra.Contexto;
 namespace SistemaEstoque.Infra.Migrations
 {
     [DbContext(typeof(DbContextEstoque))]
-    partial class DbContextEstoqueModelSnapshot : ModelSnapshot
+    [Migration("20230409165146_fixProdutoFabricante2")]
+    partial class fixProdutoFabricante2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<int>("Codigo")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("varchar(200)");
@@ -48,9 +47,6 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Numero")
                         .IsRequired()
@@ -85,9 +81,6 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<string>("Complemento")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
@@ -116,12 +109,6 @@ namespace SistemaEstoque.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("DocumentoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -129,15 +116,10 @@ namespace SistemaEstoque.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentoId")
                         .IsUnique();
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Fabricante", (string)null);
                 });
@@ -154,7 +136,7 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<Guid>("CategoriaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DataVencimento")
@@ -213,9 +195,6 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
 
@@ -227,9 +206,6 @@ namespace SistemaEstoque.Infra.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("FabricanteId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Id")
                         .HasColumnType("varchar(100)");
@@ -297,14 +273,7 @@ namespace SistemaEstoque.Infra.Migrations
                         .HasForeignKey("SistemaEstoque.Infra.Entidades.Fabricante", "DocumentoId")
                         .IsRequired();
 
-                    b.HasOne("SistemaEstoque.Infra.Entidades.Usuario", "Usuario")
-                        .WithMany("Fabricantes")
-                        .HasForeignKey("UsuarioId")
-                        .IsRequired();
-
                     b.Navigation("Documento");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Produto", b =>
@@ -358,8 +327,6 @@ namespace SistemaEstoque.Infra.Migrations
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Usuario", b =>
                 {
                     b.Navigation("Enderecos");
-
-                    b.Navigation("Fabricantes");
 
                     b.Navigation("Produtos");
                 });

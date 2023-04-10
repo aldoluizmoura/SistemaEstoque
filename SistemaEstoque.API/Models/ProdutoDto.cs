@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.API.Models
 {
@@ -7,6 +6,9 @@ namespace SistemaEstoque.API.Models
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public Guid FabricanteId { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public int Codigo { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public Guid UsuarioId { get; set; }
@@ -19,14 +21,11 @@ namespace SistemaEstoque.API.Models
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public double Preco { get; set; }
-        public string Imagem { get; set; }
+        public string Imagem { get; set; } //ajustar isso
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public bool Ativo { get; set; }
         public DateTime DataVencimento { get; set; }
-
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public DateTime DataCadastro { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "O campo {0} precisa ter o valor mínimo de {1}")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]

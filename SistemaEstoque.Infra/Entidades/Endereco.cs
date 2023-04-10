@@ -12,6 +12,7 @@ namespace SistemaEstoque.Infra.Entidades
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         // ER Relations
         public Usuario Usuario { get; set; }
@@ -30,6 +31,7 @@ namespace SistemaEstoque.Infra.Entidades
             Bairro = bairro;
             Cidade = cidade;
             Estado = estado;
+            DataCriacao = DateTime.UtcNow;
 
             Validar();
         }

@@ -6,6 +6,7 @@ namespace SistemaEstoque.Infra.Entidades
     {
         public string Nome { get; private set; }
         public int Codigo { get; private set; }
+        public DateTime DataCriacao { get; set; }
 
         // EF relations
         public ICollection<Produto> Produtos { get; set; }
@@ -15,6 +16,7 @@ namespace SistemaEstoque.Infra.Entidades
         {
             Nome = nome;
             Codigo = codigo;
+            DataCriacao = DateTime.UtcNow;
 
             Validar();
         }

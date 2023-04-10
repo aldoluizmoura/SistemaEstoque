@@ -15,7 +15,12 @@ namespace SistemaEstoque.Infra.Mappings
             builder.HasMany(u => u.Produtos)
                 .WithOne(p => p.Usuario)
                 .HasForeignKey(p => p.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);            
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(u => u.Fabricantes)
+               .WithOne(p => p.Usuario)
+               .HasForeignKey(p => p.UsuarioId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(u => u.Enderecos)
               .WithOne(e => e.Usuario)
@@ -24,9 +29,7 @@ namespace SistemaEstoque.Infra.Mappings
 
             builder.HasOne(u => u.Documento)
               .WithOne(d => d.Usuario)
-              .HasForeignKey<Usuario>(u => u.DocumentoId);
-
-          
+              .HasForeignKey<Usuario>(u => u.DocumentoId);          
 
             builder.ToTable("Usuario");
         }

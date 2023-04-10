@@ -8,6 +8,7 @@ namespace SistemaEstoque.Infra.Entidades
     {
         public TipoDocumento Tipo { get; private set; }
         public string Numero { get; private set; }
+        public DateTime DataCriacao { get; set; }
 
         //EF relations
         public Fabricante Fabricante { get; set; }
@@ -22,9 +23,10 @@ namespace SistemaEstoque.Infra.Entidades
 
             Numero = numero;
             Tipo = DefinirTipoDocumento(numero);
+            DataCriacao = DateTime.UtcNow;
         }
 
-        public TipoDocumento DefinirTipoDocumento(string numero)
+        public static TipoDocumento DefinirTipoDocumento(string numero)
         {
             if (CpfCnpjValidation.IsCpf(numero)) 
                 return TipoDocumento.CPF;

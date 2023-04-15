@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaEstoque.Infra.Contexto;
 
@@ -11,9 +12,10 @@ using SistemaEstoque.Infra.Contexto;
 namespace SistemaEstoque.Infra.Migrations
 {
     [DbContext(typeof(DbContextEstoque))]
-    partial class DbContextEstoqueModelSnapshot : ModelSnapshot
+    [Migration("20230410032802_AddMatriculaCodigoEntidades")]
+    partial class AddMatriculaCodigoEntidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

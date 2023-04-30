@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaEstoque.API", "Siste
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaEstoque.Infra", "SistemaEstoque.Infra\SistemaEstoque.Infra.csproj", "{B6E36A1C-9362-440B-913D-FAEB8A619B47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Negocio", "SistemaEstoque.Negocio\SistemaEstoque.Negocio.csproj", "{7EAA0726-EA1A-49EE-8623-58D648F6BB0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaEstoque.Negocio", "SistemaEstoque.Negocio\SistemaEstoque.Negocio.csproj", "{7EAA0726-EA1A-49EE-8623-58D648F6BB0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

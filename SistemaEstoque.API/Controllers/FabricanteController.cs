@@ -53,7 +53,7 @@ namespace SistemaEstoque.API.Controllers
         public async Task<IActionResult> ListarFabricantes()
         {
             var fabricantes = _mapper.Map<IEnumerable<FabricanteDTO>>(await _fabricanteRepository.ObterFabricantes());
-            var listaFabricantes = new List<FabricantesModel>();
+            var listaFabricantes = new List<FabricantesResponse>();
 
             if (fabricantes.Any())
             {
@@ -61,12 +61,12 @@ namespace SistemaEstoque.API.Controllers
                 {
                     var fabricante = await PegarFabricante(item.Id);
                     var documento = await PegarDocumento(fabricante.DocumentoId);
-                    var fabricanteResponse = new FabricantesModel(item.Nome, documento.Numero, item.Codigo, item.Ativo);
+                    var fabricanteResponse = new FabricantesResponse(item.Nome, documento.Numero, item.Codigo, item.Ativo);
                     listaFabricantes.Add(fabricanteResponse);
                 }
             }
 
-            return Ok(listaFabricantes);
+            return Ok(listaFabricantes.OrderBy(f=>f.Codigo));
         }
 
         [HttpGet("pegar-fabricante-por-id")]
@@ -81,7 +81,7 @@ namespace SistemaEstoque.API.Controllers
                 return NotFound("Fabricante não encontrado");
 
             var documento = await PegarDocumento(fabricante.DocumentoId);
-            var fabricanteResponse = new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo);
+            var fabricanteResponse = new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo);
             return Ok(fabricanteResponse);
         }
 
@@ -99,11 +99,11 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
+                fabricanteDto.Nome = CapitalizarNome(fabricanteDto.Nome);
+
                 await PegarUsuarioId(fabricanteDto);
 
-                CapitalizarNome(fabricanteDto);             
-
-                var fabricante = _mapper.Map<Fabricante>(fabricanteDto);
+                var fabricante = _mapper.Map<Fabricante>(fabricanteDto);                                        
 
                 if (_notificador.TemNotificacao())
                     return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
@@ -111,7 +111,7 @@ namespace SistemaEstoque.API.Controllers
                 await _fabricanteService.AdicionarFabricante(fabricante);
                 var documento = await PegarDocumento(fabricante.DocumentoId);
 
-                return CreatedAtAction(nameof(AdicionarFabricantes), new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
+                return CreatedAtAction(nameof(AdicionarFabricantes), new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
             }
             catch (EntidadeExcepetions ex)
             {
@@ -140,7 +140,7 @@ namespace SistemaEstoque.API.Controllers
             {
                 await _fabricanteService.AtualizarFabricante(fabricante);
                 var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
+                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
             }
             catch (EntidadeExcepetions ex)
             {
@@ -168,7 +168,7 @@ namespace SistemaEstoque.API.Controllers
             {
                 await _fabricanteService.MudarStatusFabricante(fabricante);
                 var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
+                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
             }
             catch (Exception e)
             {
@@ -194,7 +194,7 @@ namespace SistemaEstoque.API.Controllers
                 await _fabricanteService.AtualizarFabricante(fabricante);
 
                 var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
+                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
             }
             catch (Exception e)
             {
@@ -224,7 +224,7 @@ namespace SistemaEstoque.API.Controllers
 
                 await _fabricanteService.AlterarDocumentoFabricante(fabricanteId, documentoId);
 
-                return Ok(new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
+                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo));
             }
             catch (Exception e)
             {
@@ -237,10 +237,9 @@ namespace SistemaEstoque.API.Controllers
             await _documentoService.VerificarDisponibilidadeDocumento(fabricanteDTO.Documento.Numero);
         }
 
-        private static string CapitalizarNome(FabricanteDTO fabricanteDTO)
+        private static string CapitalizarNome(string nome)
         {
-            fabricanteDTO.Nome = CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(fabricanteDTO.Nome);
-            return fabricanteDTO.Nome;
+            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(nome);
         }
 
         private async Task<Fabricante> PegarFabricante(Guid fabricanteId)

@@ -8,9 +8,8 @@ namespace SistemaEstoque.Infra.Entidades
         public string Nome { get; private set; }
         public int Codigo { get; private set; }
         public DateTime DataCriacao { get; set; }
-        public Usuario Usuario{ get; set; }
-        public Guid UsuarioId { get; private set; }
-        public ICollection<Usuario> Usuarios { get; set; }
+        public Usuario Usuario { get; set; }
+        public Guid UsuarioId { get; private set; }        
         public Documento Documento { get; private set; }
         public Guid DocumentoId { get; private set; }
         public bool Ativo { get; private set; }

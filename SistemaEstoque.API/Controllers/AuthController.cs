@@ -100,6 +100,7 @@ namespace SistemaEstoque.API.Controllers
         [HttpPost("entrar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<ActionResult> Login(LoginDTO login)
         {
@@ -112,6 +113,9 @@ namespace SistemaEstoque.API.Controllers
                 return BadRequest("Login não realizado");
 
             var usuario = await _userManager.FindByEmailAsync(login.Email);
+
+            if (!usuario.Ativo)
+                 return Unauthorized("Usuário inativo");
 
             return Ok(new JwtToken(await GerarJwt(login.Email), 
                                                    DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));

@@ -20,14 +20,9 @@ namespace SistemaEstoque.API.Models
         public Guid UsuarioId{ get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public bool Ativo { get; set; }
-
-        public FabricanteDTO()
-        {
-            Id = Guid.Empty;
-        }
+        public bool Ativo { get; set; }        
     }
 }

@@ -8,7 +8,6 @@ using SistemaEstoque.API.Validations;
 using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
-using SistemaEstoque.Negocio;
 using SistemaEstoque.Negocio.Interfaces;
 using SistemaEstoque.Negocio.Notificacões;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +20,6 @@ namespace SistemaEstoque.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-
     public class FabricanteController : ControllerBase
     {
         private readonly IFabricanteRepository _fabricanteRepository;
@@ -30,8 +28,7 @@ namespace SistemaEstoque.API.Controllers
         private readonly IMapper _mapper;
         private readonly IDocumentoService _documentoService;
         private readonly IDocumentoRepository _documentoRepository;
-        private readonly INotificador _notificador;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<Usuario> _userManager;
+        private readonly INotificador _notificador;        
 
         public FabricanteController(IFabricanteRepository fabricanteRepository,
                                     IMapper mapper,
@@ -39,8 +36,7 @@ namespace SistemaEstoque.API.Controllers
                                     IFabricanteService fabricanteService,
                                     IDocumentoService documentoService,
                                     IDocumentoRepository documentoRepository,
-                                    INotificador notificador,
-                                     Microsoft.AspNetCore.Identity.UserManager<Usuario> userManager)
+                                    INotificador notificador)
         {
             _fabricanteRepository = fabricanteRepository;
             _mapper = mapper;
@@ -49,7 +45,6 @@ namespace SistemaEstoque.API.Controllers
             _documentoService = documentoService;
             _notificador = notificador;
             _documentoRepository = documentoRepository;
-            _userManager = userManager;
         }
 
         [HttpGet("listar-fabricantes")]
@@ -76,14 +71,14 @@ namespace SistemaEstoque.API.Controllers
 
         [HttpGet("pegar-fabricante-por-id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> PegarFabricantePorId(Guid fabricanteId)
         {
             var fabricante = await PegarFabricante(fabricanteId);
 
             if(fabricante is null)
-                return BadRequest("Fabricante não encontrado");
+                return NotFound("Fabricante não encontrado");
 
             var documento = await PegarDocumento(fabricante.DocumentoId);
             var fabricanteResponse = new FabricantesModel(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo);
@@ -132,13 +127,14 @@ namespace SistemaEstoque.API.Controllers
         [HttpPut("atualizar-fabricante")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AtualizarFabricante(Guid fabricanteId, FabricanteDTO fabricanteDto)
         {
             var fabricante = _mapper.Map<Fabricante>(fabricanteDto);
 
             if (fabricante is null)
-                return BadRequest("Fabricante não encontrado");
+                return NotFound("Fabricante não encontrado");
 
             try
             {
@@ -157,13 +153,16 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [ClaimsAuthorize("Fabricante", "Editar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("mudar-status-fabricante")]
         public async Task<IActionResult> MudarStatusFabricante([Required] Guid fabricanteId)
         {
             var fabricante = await PegarFabricante(fabricanteId);
 
             if (fabricante is null) 
-                return BadRequest("Fabricante não encontrado");
+                return NotFound("Fabricante não encontrado");
 
             try
             {
@@ -177,6 +176,9 @@ namespace SistemaEstoque.API.Controllers
             }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ClaimsAuthorize("Fabricante", "Editar")]
         [HttpPut("alterar-nome-fabricante")]
         public async Task<IActionResult> AlteraNomeFabricante([Required] Guid fabricanteId, string nomeFabricante)
@@ -184,7 +186,7 @@ namespace SistemaEstoque.API.Controllers
             var fabricante = await PegarFabricante(fabricanteId);
 
             if (fabricante is null) 
-                return BadRequest("Fabricante não encontrado");
+                return NotFound("Fabricante não encontrado!");
 
             try
             {
@@ -201,16 +203,19 @@ namespace SistemaEstoque.API.Controllers
         }
 
         [ClaimsAuthorize("Fabricante", "Editar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("alterar-documento-fabricante")]
         public async Task<IActionResult> AlterarDocumentoFabricante([Required] Guid fabricanteId, Guid documentoId)
         {
             var fabricante = await PegarFabricante(fabricanteId);
             if (fabricante is null)
-                return BadRequest("Fabricante não encontrado");
+                return NotFound("Fabricante não encontrado");
 
             var documento = await PegarDocumento(documentoId);
             if (documento is null)
-                return BadRequest("Documento não existe");
+                return NotFound("Documento não existe");
 
             try
             {

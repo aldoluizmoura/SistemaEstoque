@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SistemaEstoque.Infra.Entidades;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SistemaEstoque.API.Models
 {
@@ -10,20 +12,26 @@ namespace SistemaEstoque.API.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public int Codigo { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonIgnore]
+        public Guid Id { get; set; }
+
+        [JsonIgnore]        
         public Guid UsuarioId { get; set; }
+
+        [JsonIgnore]
+        public Categoria Categoria { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public Guid CategoriaId{ get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public double Preco { get; set; }
         public string Imagem { get; set; } //ajustar isso
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonIgnore]
         public bool Ativo { get; set; }
         public DateTime DataVencimento { get; set; }
 
@@ -32,9 +40,9 @@ namespace SistemaEstoque.API.Models
         public int QuantidadeEstoque { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string Marca { get; set; }
+        public string Marca { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string Modelo { get; set; }
+        public string Modelo { get; set; } = string.Empty;
     }
 }

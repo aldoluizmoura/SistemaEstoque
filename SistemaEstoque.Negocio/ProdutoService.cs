@@ -1,6 +1,7 @@
 ﻿using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
+using SistemaEstoque.Negocio.Notificacões;
 using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Negocio
@@ -8,10 +9,12 @@ namespace SistemaEstoque.Negocio
     public class ProdutoService : IProdutoService
     {
         public IProdutoRepository _produtoRepository;
+        private readonly INotificador _notificador;
 
-        public ProdutoService(IProdutoRepository produtoRepository)
+        public ProdutoService(IProdutoRepository produtoRepository, INotificador notificador)
         {
             _produtoRepository = produtoRepository;
+            _notificador = notificador;
         }
 
         public async Task<bool> AdicionarProduto(Produto produto)

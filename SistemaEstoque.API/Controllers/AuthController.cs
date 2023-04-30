@@ -125,7 +125,7 @@ namespace SistemaEstoque.API.Controllers
         {
             await _usuarioService.VerficarDisponibilidadeEmail(registroUsuarioDTO.Email);
             _usuarioService.VerficarIdadeUsuario(registroUsuarioDTO.DataNascimento);
-            await _documentoService.VerificarDisponibilidadeDocumento(registroUsuarioDTO.Documento.Numero);
+            await _documentoService.VerificarDisponibilidadeDocumento(registroUsuarioDTO.Documento.NumeroDocumento);
         }
 
         private Documento PegarDocumento(DocumentoDTO documentoDto)

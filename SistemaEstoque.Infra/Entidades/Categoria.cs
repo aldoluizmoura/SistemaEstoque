@@ -4,7 +4,7 @@ namespace SistemaEstoque.Infra.Entidades
 {
     public class Categoria : Entity
     {
-        public string Nome { get; private set; }
+        public string Nome { get; set; }
         public int Codigo { get; private set; }
         public DateTime DataCriacao { get; set; }
 

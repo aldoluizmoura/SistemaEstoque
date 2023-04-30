@@ -16,45 +16,33 @@ namespace SistemaEstoque.Negocio
             _notificador = notificador;
         }
 
-        public async Task<bool> AdicionarFabricante(Fabricante fabricante)
+        public async Task AdicionarFabricante(Fabricante fabricante)
         {
             try
             {
                 await _fabricanteRepository.Adicionar(fabricante);
-                return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _notificador.AdicionarNotificacao(new Notificacao("Não foi possivel cadastrar documento!"));
-                return false;
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possivel cadastrar documento! {ex.Message}"));
             }
         }
 
-        public async Task<bool> AtualizarFabricante(Fabricante fabricante)
+        public async Task AtualizarFabricante(Fabricante fabricante)
         {
             try
             {
                 await _fabricanteRepository.Atualizar(fabricante);
-                return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _notificador.AdicionarNotificacao(new Notificacao("Não foi possível atualizar"));
-                return false;
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
             }
         }
 
         public async Task MudarStatusFabricante(Fabricante fabricante)
         {
-
-            if (fabricante.Ativo)
-            {
-                fabricante.Desativar();               
-            }
-            else
-            {
-                fabricante.Ativar();
-            }
+            fabricante.Ativo = fabricante.Ativo ? fabricante.Desativar() : fabricante.Ativar();
            
             await AtualizarFabricante(fabricante);
         }

@@ -5,8 +5,8 @@ namespace SistemaEstoque.Negocio.Interfaces
 {
     public interface IFabricanteService 
     {
-        Task<bool> AdicionarFabricante(Fabricante fabricante);        
-        Task<bool> AtualizarFabricante(Fabricante fabricante);
+        Task AdicionarFabricante(Fabricante fabricante);        
+        Task AtualizarFabricante(Fabricante fabricante);
         Task MudarStatusFabricante(Fabricante fabricante);
         Task AlterarDocumentoFabricante(Guid fabricanteId, Guid documentoId);
     }

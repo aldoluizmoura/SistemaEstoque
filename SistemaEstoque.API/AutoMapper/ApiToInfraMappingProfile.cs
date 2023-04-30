@@ -18,13 +18,13 @@ namespace SistemaEstoque.API.AutoMapper
                 .ConstructUsing(c => new Categoria(c.Nome, c.Codigo));
 
             CreateMap<DocumentoDTO, Documento>()
-               .ConstructUsing(d => new Documento(d.Numero));
+               .ConstructUsing(d => new Documento(d.NumeroDocumento));
 
             CreateMap<RegistroUsuarioDTO, Usuario>()
-               .ConstructUsing(u => new Usuario(u.Nome, u.Matricula, new Documento(u.Documento.Numero), u.DataNascimento, u.Telefone, u.Email));
+               .ConstructUsing(u => new Usuario(u.Nome, u.Matricula, new Documento(u.Documento.NumeroDocumento), u.DataNascimento, u.Telefone, u.Email));
 
             CreateMap<FabricanteDTO, Fabricante>()
-              .ConstructUsing(f => new Fabricante(f.Nome, f.Codigo, new Documento(f.Documento.Numero), f.UsuarioId));
+              .ConstructUsing(f => new Fabricante(f.Nome, f.Codigo, new Documento(f.Documento.NumeroDocumento), f.UsuarioId));
         }
     }
 }

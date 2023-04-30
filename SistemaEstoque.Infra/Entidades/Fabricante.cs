@@ -12,7 +12,7 @@ namespace SistemaEstoque.Infra.Entidades
         public Guid UsuarioId { get; private set; }        
         public Documento Documento { get; private set; }
         public Guid DocumentoId { get; private set; }
-        public bool Ativo { get; private set; }
+        public bool Ativo { get; set; }
 
         public Fabricante(){}
 

@@ -5,15 +5,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SistemaEstoque.API.Migrations
 {
-    public partial class primeiraMigratonIdentity : Migration
+    /// <inheritdoc />
+    public partial class firstIdentity : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+           
             migrationBuilder.CreateTable(
                 name: "Papel",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -21,7 +24,7 @@ namespace SistemaEstoque.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Papel", x => x.Id);
-                });                     
+                });           
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -29,7 +32,7 @@ namespace SistemaEstoque.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -60,12 +63,12 @@ namespace SistemaEstoque.API.Migrations
                         name: "FK_AspNetUserTokens_Usuario_UserId",
                         column: x => x.UserId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Claim",
+                name: "Claims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -76,14 +79,14 @@ namespace SistemaEstoque.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Claim", x => x.Id);
+                    table.PrimaryKey("PK_Claims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Claim_Usuario_UserId",
+                        name: "FK_Claims_Usuario_UserId",
                         column: x => x.UserId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });            
+                });           
 
             migrationBuilder.CreateTable(
                 name: "Login",
@@ -92,7 +95,7 @@ namespace SistemaEstoque.API.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,16 +104,16 @@ namespace SistemaEstoque.API.Migrations
                         name: "FK_Login_Usuario_UserId",
                         column: x => x.UserId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });            
+                });
 
             migrationBuilder.CreateTable(
                 name: "UsuarioPapel",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,9 +128,9 @@ namespace SistemaEstoque.API.Migrations
                         name: "FK_UsuarioPapel_Usuario_UserId",
                         column: x => x.UserId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                });           
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -135,9 +138,9 @@ namespace SistemaEstoque.API.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Claim_UserId",
-                table: "Claim",
-                column: "UserId");            
+                name: "IX_Claims_UserId",
+                table: "Claims",
+                column: "UserId");           
 
             migrationBuilder.CreateIndex(
                 name: "IX_Login_UserId",
@@ -152,11 +155,25 @@ namespace SistemaEstoque.API.Migrations
                 filter: "[NormalizedName] IS NOT NULL");         
 
             migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "Usuario",
+                column: "NormalizedEmail");
+           
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "Usuario",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UsuarioPapel_RoleId",
                 table: "UsuarioPapel",
                 column: "RoleId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -166,34 +183,18 @@ namespace SistemaEstoque.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Claim");
-
-            migrationBuilder.DropTable(
-                name: "Endereco");
-
+                name: "Claims");
+         
             migrationBuilder.DropTable(
                 name: "Login");
-
-            migrationBuilder.DropTable(
-                name: "Produto");
-
+    
             migrationBuilder.DropTable(
                 name: "UsuarioPapel");
-
-            migrationBuilder.DropTable(
-                name: "Categoria");
-
-            migrationBuilder.DropTable(
-                name: "Fabricante");
-
+            
             migrationBuilder.DropTable(
                 name: "Papel");
 
-            migrationBuilder.DropTable(
-                name: "Usuario");
-
-            migrationBuilder.DropTable(
-                name: "Documento");
+    
         }
     }
 }

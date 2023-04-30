@@ -43,5 +43,26 @@ namespace SistemaEstoque.Negocio
                 return false;
             }
         }
+
+        public async Task MudarStatusFabricante(Fabricante fabricante)
+        {
+
+            if (fabricante.Ativo)
+            {
+                fabricante.Desativar();               
+            }
+            else
+            {
+                fabricante.Ativar();
+            }
+           
+            await AtualizarFabricante(fabricante);
+        }
+
+        public async Task AlterarDocumentoFabricante(Guid fabricanteId, Guid documentoId)
+        {
+            var fabricante = await _fabricanteRepository.ObterPorId(fabricanteId);
+            fabricante.TrocarDocumentoFabricante(documentoId);
+        }
     }
 }

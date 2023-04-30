@@ -18,22 +18,21 @@ namespace SistemaEstoque.Negocio
 
         public async Task MudarStatusUsuario(Usuario usuario)
         {
-            if (usuario.Ativo)
-            {
-                usuario.Desativar();
-            }
-
-            usuario.Ativar();
+            usuario.Ativo = usuario.Ativo ? usuario.Desativar() : usuario.Ativar();
+            
             await _usuarioRepository.AtualizarUsuario(usuario);
-
         }
 
         public async Task<bool> VerficarDisponibilidadeEmail(string email)
         {
-            if (await _usuarioRepository.ObterPorEmail(email) is null)
+            if (email is null)
             {
-                return true;
+                _notificador.AdicionarNotificacao(new Notificacao("email não pode ser vazio"));
+                return false;
             }
+
+            if (await _usuarioRepository.ObterPorEmail(email) is null)
+                return true;            
 
             _notificador.AdicionarNotificacao(new Notificacao("Email já está em uso"));
             return false;
@@ -43,7 +42,8 @@ namespace SistemaEstoque.Negocio
         {
             var idade = DateTime.UtcNow.Year - dataNascimento.Year;
 
-            if (idade >= 18) return true;
+            if (idade >= 18) 
+                return true;
 
             _notificador.AdicionarNotificacao(new Notificacao("Não é possivel cadastrar usuário menor de idade!"));
             return false;
@@ -53,6 +53,5 @@ namespace SistemaEstoque.Negocio
         {
             return await _usuarioRepository.ObterPorId(usuarioId);
         }
-
     }
 }

@@ -5,7 +5,7 @@ using SistemaEstoque.Infra.Entidades;
 
 namespace SistemaEstoque.API.Autenticação
 {
-    public class ApplicationDbContext : IdentityDbContext<Usuario>
+    public class ApplicationDbContext : IdentityDbContext<Usuario, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> modelBuilder) 
             : base(modelBuilder)
@@ -17,13 +17,13 @@ namespace SistemaEstoque.API.Autenticação
             base.OnModelCreating(builder);
 
             builder.Entity<Usuario>().ToTable("Usuario")
-                .Property(u => u.UsuarioId)
-                .HasColumnName("UsuarioId");
+                .Property(u => u.Id)
+                .HasColumnName("Id");
 
-            builder.Entity<IdentityUserRole<string>>().ToTable("UsuarioPapel");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("Login");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("Claim");
-            builder.Entity<IdentityRole>().ToTable("Papel");
+            builder.Entity<IdentityUserRole<Guid>>().ToTable("UsuarioPapel");
+            builder.Entity<IdentityUserLogin<Guid>>().ToTable("Login");
+            builder.Entity<IdentityUserClaim<Guid>>().ToTable("Claims");
+            builder.Entity<IdentityRole<Guid>>().ToTable("Papel");
         }
     }
 }

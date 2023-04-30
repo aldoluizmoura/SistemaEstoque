@@ -20,8 +20,7 @@ namespace SistemaEstoque.Infra.Contexto
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
+            base.OnModelCreating(modelBuilder);            
             
             foreach (var property in modelBuilder.Model.GetEntityTypes()
                 .SelectMany(e => e.GetProperties()
@@ -40,19 +39,13 @@ namespace SistemaEstoque.Infra.Contexto
             foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("DataCadastro") != null))
             {
                 if (entry.State == EntityState.Added)
-                {
                     entry.Property("DataCadastro").CurrentValue = DateTime.Now;
-                }
 
                 if (entry.State == EntityState.Modified)
-                {
                     entry.Property("DataCadastro").IsModified = false;
-                }
             }
 
             return base.SaveChangesAsync(cancellationToken);
         }
-
-
     }
 }

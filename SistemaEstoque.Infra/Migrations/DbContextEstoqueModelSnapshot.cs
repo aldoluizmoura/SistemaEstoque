@@ -17,10 +17,10 @@ namespace SistemaEstoque.Infra.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Categoria", b =>
                 {
@@ -206,7 +206,7 @@ namespace SistemaEstoque.Infra.Migrations
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Usuario", b =>
                 {
-                    b.Property<Guid>("UsuarioId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -236,9 +236,6 @@ namespace SistemaEstoque.Infra.Migrations
 
                     b.Property<Guid>("FabricanteId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -281,7 +278,7 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("varchar(100)");
 
-                    b.HasKey("UsuarioId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DocumentoId")
                         .IsUnique();

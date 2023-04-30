@@ -10,6 +10,5 @@ namespace SistemaEstoque.Infra.Interfaces.Repositorio
         Task<Usuario> ObterPorDocumento(string documento);
         Task<Usuario> ObterPorId(Guid usuarioId);
         Task AtualizarUsuario(Usuario usuario);
-
     }
 }

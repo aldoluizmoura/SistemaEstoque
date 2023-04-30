@@ -12,17 +12,18 @@ using SistemaEstoque.Infra.Contexto;
 namespace SistemaEstoque.Infra.Migrations
 {
     [DbContext(typeof(DbContextEstoque))]
-    [Migration("20230409164721_FixProdutoFabricante")]
-    partial class FixProdutoFabricante
+    [Migration("20230430034012_first")]
+    partial class first
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Categoria", b =>
                 {
@@ -32,6 +33,9 @@ namespace SistemaEstoque.Infra.Migrations
 
                     b.Property<int>("Codigo")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -47,6 +51,9 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Numero")
                         .IsRequired()
@@ -81,6 +88,9 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<string>("Complemento")
                         .HasColumnType("varchar(100)");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
@@ -109,6 +119,15 @@ namespace SistemaEstoque.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Codigo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("DocumentoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -116,7 +135,7 @@ namespace SistemaEstoque.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
-                    b.Property<Guid>("ProdutoId")
+                    b.Property<Guid>("UsuarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -124,8 +143,7 @@ namespace SistemaEstoque.Infra.Migrations
                     b.HasIndex("DocumentoId")
                         .IsUnique();
 
-                    b.HasIndex("ProdutoId")
-                        .IsUnique();
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Fabricante", (string)null);
                 });
@@ -142,7 +160,10 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<Guid>("CategoriaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DataCadastro")
+                    b.Property<int>("Codigo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DataVencimento")
@@ -179,6 +200,8 @@ namespace SistemaEstoque.Infra.Migrations
 
                     b.HasIndex("CategoriaId");
 
+                    b.HasIndex("FabricanteId");
+
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Produto", (string)null);
@@ -186,7 +209,7 @@ namespace SistemaEstoque.Infra.Migrations
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Usuario", b =>
                 {
-                    b.Property<Guid>("UsuarioId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -198,6 +221,9 @@ namespace SistemaEstoque.Infra.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
@@ -211,14 +237,17 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(100)");
+                    b.Property<Guid>("FabricanteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Matricula")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -252,7 +281,7 @@ namespace SistemaEstoque.Infra.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("varchar(100)");
 
-                    b.HasKey("UsuarioId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DocumentoId")
                         .IsUnique();
@@ -277,14 +306,14 @@ namespace SistemaEstoque.Infra.Migrations
                         .HasForeignKey("SistemaEstoque.Infra.Entidades.Fabricante", "DocumentoId")
                         .IsRequired();
 
-                    b.HasOne("SistemaEstoque.Infra.Entidades.Produto", "Produto")
-                        .WithOne("Fabricante")
-                        .HasForeignKey("SistemaEstoque.Infra.Entidades.Fabricante", "ProdutoId")
+                    b.HasOne("SistemaEstoque.Infra.Entidades.Usuario", "Usuario")
+                        .WithMany("Fabricantes")
+                        .HasForeignKey("UsuarioId")
                         .IsRequired();
 
                     b.Navigation("Documento");
 
-                    b.Navigation("Produto");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Produto", b =>
@@ -294,12 +323,19 @@ namespace SistemaEstoque.Infra.Migrations
                         .HasForeignKey("CategoriaId")
                         .IsRequired();
 
+                    b.HasOne("SistemaEstoque.Infra.Entidades.Fabricante", "Fabricante")
+                        .WithMany()
+                        .HasForeignKey("FabricanteId")
+                        .IsRequired();
+
                     b.HasOne("SistemaEstoque.Infra.Entidades.Usuario", "Usuario")
                         .WithMany("Produtos")
                         .HasForeignKey("UsuarioId")
                         .IsRequired();
 
                     b.Navigation("Categoria");
+
+                    b.Navigation("Fabricante");
 
                     b.Navigation("Usuario");
                 });
@@ -328,15 +364,11 @@ namespace SistemaEstoque.Infra.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Produto", b =>
-                {
-                    b.Navigation("Fabricante")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SistemaEstoque.Infra.Entidades.Usuario", b =>
                 {
                     b.Navigation("Enderecos");
+
+                    b.Navigation("Fabricantes");
 
                     b.Navigation("Produtos");
                 });

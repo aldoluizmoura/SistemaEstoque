@@ -1,13 +1,13 @@
 ﻿namespace SistemaEstoque.API.Models
 {
-    public class TokenModel
+    public class JwtToken
     {
         public string Token { get; set; }        
         public DateTime DataExpiracao { get; set; }
 
-        public TokenModel(string token, DateTime dataExpiracao)
+        public JwtToken(string token, DateTime dataExpiracao)
         {
-            Token = token;            
+            Token = token;
             DataExpiracao = dataExpiracao;
         }
     }

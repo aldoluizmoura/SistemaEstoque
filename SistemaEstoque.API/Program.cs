@@ -18,7 +18,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
@@ -32,9 +31,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                               options.UseSqlServer(builder.Configuration
                               .GetConnectionString("DefaultConnection")));
 
+
 //Identity config
-builder.Services.AddIdentity<Usuario, IdentityRole>()
-    .AddRoles<IdentityRole>()    
+builder.Services.AddIdentity<Usuario, IdentityRole<Guid>>()
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -71,8 +71,10 @@ builder.Services.AddSwaggerGen(c =>
                 });
 });
 
+//automapper
 builder.Services.AddAutoMapper(typeof(InfraToApiMappingProfile),
                                typeof(ApiToInfraMappingProfile));
+
 
 // Injenção de Dependencia
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
@@ -112,6 +114,7 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
+        ValidateLifetime = true,
         ValidateAudience = true,
         ValidAudience = appSettings.ValidoEm,
         ValidIssuer = appSettings.Emissor
@@ -123,7 +126,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
+{    
     app.UseSwagger();
     app.UseSwaggerUI();
 }

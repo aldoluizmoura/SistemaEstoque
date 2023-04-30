@@ -81,12 +81,11 @@ namespace SistemaEstoque.Negocio
             {
                 produto.Desativar();
                 await AtualizarProduto(produto);
+                return;
             }
 
             produto.Ativar();
             await AtualizarProduto(produto);
-
-
         }
 
         private async Task<Produto> PegarProduto(Guid ProdutoId)

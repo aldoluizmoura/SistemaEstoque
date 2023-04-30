@@ -10,6 +10,7 @@ namespace SistemaEstoque.Infra.Entidades
         public DateTime DataCriacao { get; set; }
         public Usuario Usuario{ get; set; }
         public Guid UsuarioId { get; private set; }
+        public ICollection<Usuario> Usuarios { get; set; }
         public Documento Documento { get; private set; }
         public Guid DocumentoId { get; private set; }
         public bool Ativo { get; private set; }
@@ -29,16 +30,24 @@ namespace SistemaEstoque.Infra.Entidades
         }
 
         public bool Ativar() => Ativo = true;
-        public bool Desativar() => Ativo = false;        
+        public bool Desativar() => Ativo = false;
+
+        public void AlterarNome(string nome)
+        {
+            Validacoes.ValidarSeVazio(nome, "O Nome não pode ser vazio");
+            Nome = nome;
+        }
+
+        public void TrocarDocumentoFabricante(Guid documentoId) => DocumentoId = documentoId;
 
         private void Validar(Documento documento)
         {
-            Validacoes.ValidarSeVazio(Nome, "Nome do Fabricante não pode ser vazio.");            
-            Validacoes.ValidarSeNulo(Documento, "Documento do Fabricante não pode ser nulo.");            
-            Validacoes.ValidarSeNulo(UsuarioId, "Fabricante precisa de um usuário associado.");  
-            
-            if(Documento.DefinirTipoDocumento(documento.Numero) == Enums.TipoDocumento.CPF)
+            Validacoes.ValidarSeVazio(Nome, "Nome do Fabricante não pode ser vazio.");
+            Validacoes.ValidarSeNulo(Documento, "Documento do Fabricante não pode ser nulo.");
+            Validacoes.ValidarSeNulo(UsuarioId, "Fabricante precisa de um usuário associado.");
+
+            if (Documento.DefinirTipoDocumento(documento.Numero) == Enums.TipoDocumento.CPF)
                 throw new EntidadeExcepetions("Para Fabricantes não é permitido esse tipo de documento");
-        }        
+        }
     }
 }

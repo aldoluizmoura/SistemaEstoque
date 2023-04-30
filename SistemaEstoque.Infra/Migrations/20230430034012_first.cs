@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SistemaEstoque.Infra.Migrations
 {
-    public partial class Primeira : Migration
+    /// <inheritdoc />
+    public partial class first : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -15,7 +17,8 @@ namespace SistemaEstoque.Infra.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "varchar(200)", nullable: false),
-                    Codigo = table.Column<int>(type: "int", nullable: false)
+                    Codigo = table.Column<int>(type: "int", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,7 +31,8 @@ namespace SistemaEstoque.Infra.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
-                    Numero = table.Column<string>(type: "varchar(14)", nullable: false)
+                    Numero = table.Column<string>(type: "varchar(14)", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,34 +40,18 @@ namespace SistemaEstoque.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Fabricante",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "varchar(200)", nullable: false),
-                    DocumentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fabricante", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Fabricante_Documento_DocumentoId",
-                        column: x => x.DocumentoId,
-                        principalTable: "Documento",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Usuario",
                 columns: table => new
                 {
-                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Matricula = table.Column<int>(type: "int", nullable: false),
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Telefone = table.Column<string>(type: "varchar(20)", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false),
                     DocumentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Id = table.Column<string>(type: "varchar(100)", nullable: true),
+                    FabricanteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "varchar(100)", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(100)", nullable: true),
                     Email = table.Column<string>(type: "varchar(100)", nullable: true),
@@ -81,7 +69,7 @@ namespace SistemaEstoque.Infra.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Usuario", x => x.UsuarioId);
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Usuario_Documento_DocumentoId",
                         column: x => x.DocumentoId,
@@ -101,6 +89,7 @@ namespace SistemaEstoque.Infra.Migrations
                     Bairro = table.Column<string>(type: "varchar(100)", nullable: false),
                     Cidade = table.Column<string>(type: "varchar(100)", nullable: false),
                     Estado = table.Column<string>(type: "varchar(50)", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -110,7 +99,34 @@ namespace SistemaEstoque.Infra.Migrations
                         name: "FK_Endereco_Usuario_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId");
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fabricante",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "varchar(200)", nullable: false),
+                    Codigo = table.Column<int>(type: "int", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DocumentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fabricante", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Fabricante_Documento_DocumentoId",
+                        column: x => x.DocumentoId,
+                        principalTable: "Documento",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Fabricante_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -119,17 +135,18 @@ namespace SistemaEstoque.Infra.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Descricao = table.Column<string>(type: "varchar(250)", nullable: false),
+                    Codigo = table.Column<int>(type: "int", nullable: false),
                     Preco = table.Column<double>(type: "float", nullable: false),
                     QuantidadeEstoque = table.Column<int>(type: "int", nullable: false),
                     Marca = table.Column<string>(type: "varchar(250)", nullable: false),
                     Modelo = table.Column<string>(type: "varchar(250)", nullable: false),
                     Imagem = table.Column<string>(type: "varchar(100)", nullable: true),
                     DataVencimento = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false),
                     FabricanteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoriaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Ativo = table.Column<bool>(type: "bit", nullable: false)
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -148,7 +165,7 @@ namespace SistemaEstoque.Infra.Migrations
                         name: "FK_Produto_Usuario_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
-                        principalColumn: "UsuarioId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -161,6 +178,11 @@ namespace SistemaEstoque.Infra.Migrations
                 table: "Fabricante",
                 column: "DocumentoId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fabricante_UsuarioId",
+                table: "Fabricante",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Produto_CategoriaId",
@@ -184,6 +206,7 @@ namespace SistemaEstoque.Infra.Migrations
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

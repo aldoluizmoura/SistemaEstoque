@@ -34,7 +34,7 @@ namespace SistemaEstoque.Infra.Repositorios
 
         public async Task<Usuario> ObterPorId(Guid usuarioId)
         {
-            return await Dbset.AsNoTracking().Where(u => u.UsuarioId == usuarioId).FirstOrDefaultAsync();
+            return await Dbset.AsNoTracking().Where(u => u.Id == usuarioId).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Usuario>> ObterPorNome(string nomeUsuario)

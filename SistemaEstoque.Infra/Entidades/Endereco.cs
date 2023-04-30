@@ -1,5 +1,4 @@
 ﻿using SistemaEstoque.Infra.Entidades.Validações;
-using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Infra.Entidades
 {

@@ -12,6 +12,7 @@ using SistemaEstoque.Negocio.Notificacões;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Text;
 
 namespace SistemaEstoque.API.Controllers
@@ -60,7 +61,7 @@ namespace SistemaEstoque.API.Controllers
             {
                 CapitalizarNome(registroUsuarioDTO);
 
-                var usuario = _mapper.Map<Usuario>(registroUsuarioDTO);
+                var usuario = _mapper.Map<Usuario>(registroUsuarioDTO);                    
 
                 if (_notificador.TemNotificacao())
                     return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
@@ -82,11 +83,13 @@ namespace SistemaEstoque.API.Controllers
                 }
 
                 await _signInManager.SignInAsync(usuario, false);
-                return Ok(new TokenModel(await GerarJwt(usuario.Email), DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
+
+                return Ok(new JwtToken(await GerarJwt(usuario.Email), 
+                                                      DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
             }
             catch (EntidadeExcepetions ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"{ex.InnerException?.Message} {ex.Message}");
             }
             catch (Exception ex)
             {
@@ -104,11 +107,14 @@ namespace SistemaEstoque.API.Controllers
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, false, true);
-
+           
             if (!result.Succeeded)
                 return BadRequest("Login não realizado");
 
-            return Ok(new TokenModel(await GerarJwt(login.Email), DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
+            var usuario = await _userManager.FindByEmailAsync(login.Email);
+
+            return Ok(new JwtToken(await GerarJwt(login.Email), 
+                                                   DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras)));
         }
 
         private async Task ValidarCadastro(RegistroUsuarioDTO registroUsuarioDTO)
@@ -133,11 +139,20 @@ namespace SistemaEstoque.API.Controllers
         {
             var usuario = await _userManager.FindByEmailAsync(email);
 
+            var identityClaims = new ClaimsIdentity(new[]
+            {
+                new Claim(type: ClaimTypes.NameIdentifier, value: usuario.Id.ToString())
+            });
+
+            var claims = await _userManager.GetClaimsAsync(usuario);
+            identityClaims.AddClaims(claims);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Subject = identityClaims,
                 Issuer = _appSettings.Emissor,
                 Audience = _appSettings.ValidoEm,
                 Expires = DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras),

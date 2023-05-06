@@ -1,17 +1,38 @@
 ﻿using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces;
+using System.Globalization;
 
 namespace SistemaEstoque.Infra.Entidades
 {
     public class Produto : Entity, IAggregateRoot
-    {   
-        public string Descricao { get; private set; }
+    {
+        private string _descricao = string.Empty;
+        private string _marca = string.Empty;
+        private string _modelo = string.Empty;
+
+        public string Descricao
+        {
+            get { return _descricao; }
+            set { _descricao = CapitalizarString(value); }
+        }
+
+        public string Marca
+        {
+            get { return _marca; }
+            set { _marca = CapitalizarString(value); }
+        }
+
+        public string Modelo
+        {
+            get { return _modelo; }
+            set { _modelo = CapitalizarString(value); }
+        }
+
         public int Codigo { get; private set; }
         public double Preco { get; private set; }
         public int QuantidadeEstoque { get; private set; }
-        public string Marca { get; private set; }
-        public string Modelo { get; private set; }
+       
         public string? Imagem { get; private set; }
         public DateTime? DataVencimento { get; private set; }
         public DateTime DataCriacao { get; private set; }
@@ -28,7 +49,7 @@ namespace SistemaEstoque.Infra.Entidades
         public Produto(){}
         public Produto(string descricao, int codigo, double preco, int quantidadeEstoque, string marca, string modelo,
                        Guid fabricanteId, Guid categoriaId, DateTime? dataVencimento, 
-                       string imagem, Guid usuarioId, bool activo)
+                       string imagem, Guid usuarioId)
         {
             Descricao = descricao;
             Codigo = codigo;
@@ -42,7 +63,7 @@ namespace SistemaEstoque.Infra.Entidades
             DataVencimento = dataVencimento;
             DataCriacao = DateTime.UtcNow;
             UsuarioId = usuarioId;
-            Ativo = activo;
+            Ativo = true;
 
             Validar();
         }
@@ -88,6 +109,11 @@ namespace SistemaEstoque.Infra.Entidades
         public bool PossuiEstoque(int quantidade)
         {
             return QuantidadeEstoque >= quantidade;
+        }
+
+        private string CapitalizarString(string value)
+        {
+            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(value);
         }
     }
 }

@@ -34,18 +34,19 @@ namespace SistemaEstoque.Negocio
             {
                 var categoria = await _categoriaRepository.ObterPorId(categoriaId);
 
-                if (categoria is not null)
+                if (categoria is null)
+                {
+                    _notificador.AdicionarNotificacao(new Notificacao("Categoria não encontrada"));
+                }
+                else
                 {
                     categoria.Nome = descricaoCategoria;
                     await _categoriaRepository.Atualizar(categoria);
                 }
-
-                _notificador.AdicionarNotificacao(new Notificacao("Categoria não encontrada"));
-
             }
             catch (Exception ex)
             {
-                _notificador.AdicionarNotificacao(new Notificacao($"Atualização não foi bem sucessedida! {ex.Message}"));
+                _notificador.AdicionarNotificacao(new Notificacao($"A atualização não foi bem sucessedida! {ex.Message}"));
             }
         }
     }

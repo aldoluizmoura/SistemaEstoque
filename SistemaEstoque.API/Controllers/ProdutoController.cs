@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SistemaEstoque.API.Autenticação;
 using SistemaEstoque.API.Models;
 using SistemaEstoque.API.Models.ModelsResponse;
 using SistemaEstoque.API.Validations;
@@ -9,7 +10,9 @@ using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Net.Mime;
+using System.Security.Claims;
 
 namespace SistemaEstoque.API.Controllers
 {
@@ -43,18 +46,10 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> ListarProdutos()
         {
-            var produtos = _mapper.Map<IEnumerable<ProdutoDto>>(await _produtoRepository.ObterProdutos());
-            var listaProdutos = new List<ProdutoResponse>();
-
-            if (produtos.Any())
-            {
-                foreach (var item in produtos)
-                {
-                    var produto = await PegarProduto(item.Id);
-                    var produtoResponse = new ProdutoResponse(item.Descricao, item.Codigo, item.Ativo, item.DataVencimento, item.Marca, item.Modelo, item.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
-                    listaProdutos.Add(produtoResponse);
-                }
-            }
+            var produtos = await _produtoRepository.ObterProdutos();            
+            
+            var listaProdutos = produtos.Select(p => new ProdutoResponse(p.Descricao, p.Codigo, p.Ativo, p.DataVencimento, p.Marca, p.Modelo, p.Categoria.Nome, p.QuantidadeEstoque, p.Id))
+                                        .OrderBy(p => p.Codigo).ToList();
 
             return Ok(listaProdutos.OrderBy(p => p.Codigo));
         }
@@ -78,21 +73,29 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> ObterProdutosCategoria(Guid CategoriaId)
         {
-            var produtos = await _produtoRepository.ObterProdutosPorCategorias(CategoriaId);
+            var produtos = await _produtoRepository.ObterProdutosPorCategorias(CategoriaId);                       
 
-            if(!produtos.Any())
-                return NotFound("Nada encontrado!");                   
-
-            var listaProdutos = new List<ProdutoResponse>();
-
-            foreach (var item in produtos)
+            var listaProdutos = produtos.Select(async item =>
             {
                 var produto = await PegarProduto(item.Id);
-                var produtoResponse = new ProdutoResponse(item.Descricao, item.Codigo, item.Ativo, item.DataVencimento, item.Marca, item.Modelo, item.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
-                listaProdutos.Add(produtoResponse);
-            }
+                return new ProdutoResponse(
+                    item.Descricao,
+                    item.Codigo,
+                    item.Ativo,
+                    item.DataVencimento,
+                    item.Marca,
+                    item.Modelo,
+                    item.Categoria.Nome,
+                    produto.QuantidadeEstoque,
+                    produto.Id);
+            })
+            .OrderBy(p => p.Result.NomeCategoria)
+            .ToList();
 
-            return Ok(listaProdutos.OrderBy(p => p.NomeCategoria));
+            if (listaProdutos.Count == 0)
+                return NotFound("Nada encontrado!");
+
+            return Ok(listaProdutos);
         }
 
         [HttpGet("listar-categorias")]
@@ -101,18 +104,12 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> ListarCategorias()
         {
-            var categorias = await _categoriaRepository.ObterCategorias();
-            if (!categorias.Any())
+            var categorias = await _categoriaRepository.ObterCategorias();           
+
+            var listaCategorias = categorias.Select(c => new CategoriasResponse(c.Nome, c.Codigo, c.Id));
+
+            if (!listaCategorias.Any())
                 return NotFound("Nenhuma Categoria cadastrada!");
-
-            var listaCategorias = new List<CategoriasResponse>();
-
-            foreach (var item in categorias)
-            {
-                var categoria = await PegarCategoria(item.Id);
-                var categoriaResponse = new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id);
-                listaCategorias.Add(categoriaResponse);
-            }
 
             return Ok(listaCategorias);
         }
@@ -126,8 +123,9 @@ namespace SistemaEstoque.API.Controllers
             var categoria = _mapper.Map<Categoria>(categoriaDto);
             try
             {
-                await _categoriaService.AdicionarCategoria(categoria);
-                return CreatedAtAction(nameof(AdicionarCategoria), new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id));
+                await _categoriaService.AdicionarCategoria(categoria); 
+                var categoriaResponse = new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id);
+                return CreatedAtAction(nameof(AdicionarCategoria), categoriaResponse);
             }
             catch (EntidadeExcepetions ex)
             {
@@ -135,7 +133,7 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -149,7 +147,8 @@ namespace SistemaEstoque.API.Controllers
             {
                 await _categoriaService.AlterarDescricaoCategoria(descricaoCategoria, categoriaId);
                 var categoria = await PegarCategoria(categoriaId);
-                return Ok(new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id));
+                var categoriaResponse = new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id);
+                return CreatedAtAction(nameof(AdicionarCategoria), categoriaResponse);
             }
             catch (EntidadeExcepetions ex)
             {
@@ -157,7 +156,7 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -168,16 +167,19 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AdicionarProdutos(ProdutoDto produtoDto)
         {
-            var produto = _mapper.Map<Produto>(produtoDto);
-
             try
             {
-                var categoria = _categoriaRepository.ObterPorId(produtoDto.CategoriaId);
+                PegarUsuarioId(produtoDto);
+
+                var produto = _mapper.Map<Produto>(produtoDto);
+
+                var categoria = await _categoriaRepository.ObterPorId(produtoDto.CategoriaId);
                 if(categoria is null)
-                    return NotFound("Categoria não encontrada");
+                    return NotFound("Categoria não encontrada!");               
 
                 await _produtoService.AdicionarProduto(produto);
-                return CreatedAtAction(nameof(AdicionarProdutos),new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(AdicionarProdutos), produtoResponse);
             }
             catch (EntidadeExcepetions ex)
             {
@@ -185,7 +187,7 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -204,12 +206,13 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                produto.AlterarCategoria(categoria);                
-                return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                produto.AlterarCategoria(categoria);
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(AdicionarProdutos), produtoResponse);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -228,11 +231,12 @@ namespace SistemaEstoque.API.Controllers
             try
             {
                 produto.AlterarDescricao(descricaoProduto);
-                return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(AdicionarProdutos), produtoResponse);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -251,11 +255,12 @@ namespace SistemaEstoque.API.Controllers
             try
             {
                 await _produtoService.MudarStatusProduto(produto);
-                return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(MudarStatusProduto), produtoResponse);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -279,7 +284,7 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -297,14 +302,17 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                if(await _produtoService.ReporEstoque(produto.Id, quantidade)) 
-                    return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                if(await _produtoService.ReporEstoque(produto.Id, quantidade))
+                {
+                    var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                    return CreatedAtAction(nameof(ReporEstoque), produtoResponse);
+                }                    
 
                 return BadRequest("Quantidade inválida");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -322,14 +330,17 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                if(await _produtoService.DebitarEstoque(produto.Id, quantidade)) 
-                    return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
+                if(await _produtoService.DebitarEstoque(produto.Id, quantidade))
+                {
+                    var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                    return CreatedAtAction(nameof(DebitarEstoque), produtoResponse);
+                }                
 
                 return BadRequest(new ProdutoErrorInfo(produto.QuantidadeEstoque,quantidade));
             }
             catch (Exception ex) 
-            { 
-                return BadRequest(ex.Message); 
+            {
+                return StatusCode(500, ex.Message);
             }
         }       
 
@@ -341,6 +352,23 @@ namespace SistemaEstoque.API.Controllers
         private async Task<Categoria> PegarCategoria(Guid categoriaId)
         {
             return await _categoriaRepository.ObterPorId(categoriaId);
+        }
+
+        private async Task PegarUsuarioId(ProdutoDto produtoDto)
+        {
+            var context = new HttpContextAccessor().HttpContext;
+            var identity = context.User.Identity as ClaimsIdentity;
+
+            if (identity.IsAuthenticated)
+            {
+                var claim = AuthExtension.PegarUsuarioIdDoContext(context);
+                produtoDto.UsuarioId = new Guid(claim?.Value);
+            }
+        }
+
+        private static string CapitalizarString(string value)
+        {
+            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(value);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SistemaEstoque.API.Models.ModelsResponse
         public string Marca { get; set; } = string.Empty;
         public string Modelo { get; set; } = string.Empty;
         public string NomeCategoria { get; set; }
-        public int QuantidadeEstoque { get; private set; }
+        public int QuantidadeEstoque { get; set; }
 
 
         public ProdutoResponse(string descricao, int codigo, bool ativo, DateTime? dataVencimento, string marca, string modelo, string nomeCategoria, int quantidadeEstoque, Guid id)

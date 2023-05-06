@@ -1,5 +1,7 @@
-﻿using SistemaEstoque.Infra.Entidades;
+﻿using Newtonsoft.Json.Linq;
+using SistemaEstoque.Infra.Entidades;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace SistemaEstoque.API.Models
@@ -17,9 +19,6 @@ namespace SistemaEstoque.API.Models
 
         [JsonIgnore]        
         public Guid UsuarioId { get; set; }
-
-        [JsonIgnore]
-        public Categoria Categoria { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public Guid CategoriaId{ get; set; }
@@ -43,6 +42,6 @@ namespace SistemaEstoque.API.Models
         public string Marca { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string Modelo { get; set; } = string.Empty;
+        public string Modelo { get; set; } = string.Empty;        
     }
 }

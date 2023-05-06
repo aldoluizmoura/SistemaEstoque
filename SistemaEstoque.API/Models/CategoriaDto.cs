@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace SistemaEstoque.API.Models
 {
@@ -9,5 +11,10 @@ namespace SistemaEstoque.API.Models
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public int Codigo { get; set; }
+
+        public CategoriaDto()
+        {
+            Nome = CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(Nome); ;
+        }
     }
 }

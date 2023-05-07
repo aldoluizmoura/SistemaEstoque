@@ -7,6 +7,7 @@ namespace SistemaEstoque.Infra.Entidades
     public class Fabricante : Entity
     {
         private string _nome = string.Empty;
+        private bool _ativo;
         public string Nome
         {
             get { return _nome; }
@@ -18,7 +19,11 @@ namespace SistemaEstoque.Infra.Entidades
         public Guid UsuarioId { get; private set; }        
         public Documento Documento { get; set; }
         public Guid DocumentoId { get; private set; }
-        public bool Ativo { get; set; }
+        public bool Ativo 
+        {
+            get { return _ativo; }
+            set { _ativo = true; } 
+        }
 
         public Fabricante(){}
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Entidades.Extensions;
 using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
@@ -12,6 +11,7 @@ namespace SistemaEstoque.Infra.Entidades
         public IReadOnlyCollection<string> Errors => _errors;
 
         private string _nome = string.Empty;
+        private bool _ativo;
         public string Nome
         {
             get { return _nome; }
@@ -22,7 +22,11 @@ namespace SistemaEstoque.Infra.Entidades
         public DateTime DataNascimento { get; private set; }
         public DateTime DataCriacao { get; private set; }
         public string Telefone { get; private set; }
-        public bool Ativo { get; set; }
+        public bool Ativo
+        {
+            get { return _ativo; }
+            set { _ativo = true; }
+        }
 
         //EF Relations
         public ICollection<Endereco> Enderecos { get; set; }

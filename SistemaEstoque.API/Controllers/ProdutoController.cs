@@ -186,7 +186,7 @@ namespace SistemaEstoque.API.Controllers
             {
                 PegarUsuarioId(produtoDto);
 
-                var produto = _mapper.Map<Produto>(produtoDto);
+                var produto = _mapper.Map<Produto>(produtoDto);              
 
                 if (_notificador.TemNotificacao())
                     return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
@@ -222,6 +222,9 @@ namespace SistemaEstoque.API.Controllers
             if (produto is null) 
                 return NotFound("Produto não encontrado");
 
+            if (!produto.Ativo)
+                return BadRequest("Produto não está ativo");
+
             try
             {
                 produto.AlterarCategoria(categoria);
@@ -246,6 +249,9 @@ namespace SistemaEstoque.API.Controllers
             if (produto is null) 
                 return NotFound("Produto não encontrado");
 
+            if (!produto.Ativo)
+                return BadRequest("Produto não está ativo");
+
             try
             {
                 produto.AlterarDescricao(descricaoProduto);
@@ -269,6 +275,9 @@ namespace SistemaEstoque.API.Controllers
 
             if (produto is null) 
                 return NotFound("Produto não encontrado");
+
+            if (!produto.Ativo)
+                return BadRequest("Produto não está ativo");
 
             try
             {

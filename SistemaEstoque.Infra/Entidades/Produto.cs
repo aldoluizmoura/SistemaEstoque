@@ -10,6 +10,7 @@ namespace SistemaEstoque.Infra.Entidades
         private string _descricao = string.Empty;
         private string _marca = string.Empty;
         private string _modelo = string.Empty;
+        private bool _ativo;
 
         public string Descricao
         {
@@ -36,7 +37,11 @@ namespace SistemaEstoque.Infra.Entidades
         public string? Imagem { get; private set; }
         public DateTime? DataVencimento { get; private set; }
         public DateTime DataCriacao { get; private set; }
-        public bool Ativo { get; private set; }
+        public bool Ativo
+        {
+            get { return _ativo; }
+            set { _ativo = true; }
+        }
 
         //ER Relations
         public Fabricante Fabricante { get; private set; }
@@ -48,8 +53,7 @@ namespace SistemaEstoque.Infra.Entidades
 
         public Produto(){}
         public Produto(string descricao, int codigo, double preco, int quantidadeEstoque, string marca, string modelo,
-                       Guid fabricanteId, Guid categoriaId, DateTime? dataVencimento, 
-                       string imagem, Guid usuarioId)
+                       Guid fabricanteId, Guid categoriaId, DateTime? dataVencimento,string imagem, Guid usuarioId)
         {
             Descricao = descricao;
             Codigo = codigo;
@@ -68,9 +72,9 @@ namespace SistemaEstoque.Infra.Entidades
             Validar();
         }
 
-        public void Ativar() => Ativo = true;
+        public bool Ativar() => Ativo = true;
 
-        public void Desativar() => Ativo = false;
+        public bool Desativar() => Ativo = false;
 
         public void AlterarCategoria(Categoria categoria)
         {

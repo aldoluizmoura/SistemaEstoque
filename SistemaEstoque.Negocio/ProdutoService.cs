@@ -1,8 +1,8 @@
-﻿using SistemaEstoque.Infra.Entidades;
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
 using SistemaEstoque.Negocio.Notificacões;
-using System.ComponentModel.DataAnnotations;
 
 namespace SistemaEstoque.Negocio
 {
@@ -17,78 +17,101 @@ namespace SistemaEstoque.Negocio
             _notificador = notificador;
         }
 
-        public async Task<bool> AdicionarProduto(Produto produto)
+        public async Task AdicionarProduto(Produto produto)
         {
             try
             {
                 await _produtoRepository.Adicionar(produto);
-                return true;
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                return false;
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
             }
         }
 
-        public async Task<bool> AtualizarProduto(Produto produto)
+        public async Task AtualizarProduto(Produto produto)
         {
             try
             {
                 if (await _produtoRepository.ObterPorId(produto.Id) is not null)
                 {
                     await _produtoRepository.Atualizar(produto);
-                    return true;
                 }
 
-                return false;
-
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                return false;
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
             }
         }
 
-        public async Task<bool> DebitarEstoque(Guid ProdutoId, int quantidade)
+        public async Task DebitarEstoque(Guid ProdutoId, int quantidade)
         {
             var produto = await PegarProduto(ProdutoId);
 
-            if (produto.QuantidadeEstoque >= quantidade)
+            try
             {
-                produto.DebitarEstoque(quantidade);
-                await AtualizarProduto(produto);
-                return true;
+                if (produto.QuantidadeEstoque >= quantidade)
+                {
+                    produto.DebitarEstoque(quantidade);
+                    await AtualizarProduto(produto);
+                }
             }
-
-            return false;
+            catch (DbUpdateException ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
         }
 
-        public async Task<bool> ReporEstoque(Guid ProdutoId, int quantidade)
+        public async Task ReporEstoque(Guid ProdutoId, int quantidade)
         {
             var produto = await PegarProduto(ProdutoId);
 
-            if (produto.QuantidadeEstoque > 0)
+            try
             {
-                produto.ReporEstoque(quantidade);
-                await AtualizarProduto(produto);
-                return true;
+                if (produto.QuantidadeEstoque > 0)
+                {
+                    produto.ReporEstoque(quantidade);
+                    await AtualizarProduto(produto);
+                }
             }
-
-            return false;
+            catch (DbUpdateException ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
         }
 
         public async Task MudarStatusProduto(Produto produto)
         {
-
-            if (produto.Ativo)
+            try
             {
-                produto.Desativar();
+                produto.Ativo = produto.Ativo ? produto.Desativar() : produto.Ativar();
                 await AtualizarProduto(produto);
-                return;
             }
-
-            produto.Ativar();
-            await AtualizarProduto(produto);
+            catch (DbUpdateException ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
         }
 
         private async Task<Produto> PegarProduto(Guid ProdutoId)

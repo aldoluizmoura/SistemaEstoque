@@ -1,7 +1,7 @@
-﻿using SistemaEstoque.Infra.Entidades.Validações;
+﻿using SistemaEstoque.Infra.Entidades.Extensions;
+using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces;
-using System.Globalization;
 
 namespace SistemaEstoque.Infra.Entidades
 {
@@ -14,19 +14,19 @@ namespace SistemaEstoque.Infra.Entidades
         public string Descricao
         {
             get { return _descricao; }
-            set { _descricao = CapitalizarString(value); }
+            set { _descricao = StringExtensions.CapitalizarString(value); }
         }
 
         public string Marca
         {
             get { return _marca; }
-            set { _marca = CapitalizarString(value); }
+            set { _marca = StringExtensions.CapitalizarString(value); }
         }
 
         public string Modelo
         {
             get { return _modelo; }
-            set { _modelo = CapitalizarString(value); }
+            set { _modelo = StringExtensions.CapitalizarString(value); }
         }
 
         public int Codigo { get; private set; }
@@ -109,11 +109,6 @@ namespace SistemaEstoque.Infra.Entidades
         public bool PossuiEstoque(int quantidade)
         {
             return QuantidadeEstoque >= quantidade;
-        }
-
-        private string CapitalizarString(string value)
-        {
-            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(value);
         }
     }
 }

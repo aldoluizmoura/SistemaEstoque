@@ -1,14 +1,19 @@
 ﻿using SistemaEstoque.Infra.Entidades;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace SistemaEstoque.API.Models
 {
     public class FabricanteDTO
     {
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public DocumentoDTO Documento { get; set; }
+        //[JsonIgnore]
+        //public Documento Documento { get; set; }
+
+        //[Required(ErrorMessage = "O campo {0} é obrigatório")]        
+        //public DocumentoDTO DocumentoDTO { get; set; }
+
+
+        public string NumeroDocumento { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public int Codigo{ get; set; }

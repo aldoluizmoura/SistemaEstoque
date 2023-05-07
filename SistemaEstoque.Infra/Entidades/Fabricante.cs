@@ -1,16 +1,22 @@
-﻿using SistemaEstoque.Infra.Entidades.Validações;
+﻿using SistemaEstoque.Infra.Entidades.Extensions;
+using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
 
 namespace SistemaEstoque.Infra.Entidades
 {
     public class Fabricante : Entity
     {
-        public string Nome { get; private set; }
+        private string _nome = string.Empty;
+        public string Nome
+        {
+            get { return _nome; }
+            set { _nome = StringExtensions.CapitalizarString(value); }
+        }
         public int Codigo { get; private set; }
         public DateTime DataCriacao { get; set; }
         public Usuario Usuario { get; set; }
         public Guid UsuarioId { get; private set; }        
-        public Documento Documento { get; private set; }
+        public Documento Documento { get; set; }
         public Guid DocumentoId { get; private set; }
         public bool Ativo { get; set; }
 

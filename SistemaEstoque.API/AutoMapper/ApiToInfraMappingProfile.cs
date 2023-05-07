@@ -24,7 +24,7 @@ namespace SistemaEstoque.API.AutoMapper
                .ConstructUsing(u => new Usuario(u.Nome, u.Matricula, new Documento(u.Documento.NumeroDocumento), u.DataNascimento, u.Telefone, u.Email));
 
             CreateMap<FabricanteDTO, Fabricante>()
-              .ConstructUsing(f => new Fabricante(f.Nome, f.Codigo, new Documento(f.Documento.NumeroDocumento), f.UsuarioId));
+              .ConstructUsing(f => new Fabricante(f.Nome, f.Codigo, new Documento(f.NumeroDocumento), f.UsuarioId));
         }
     }
 }

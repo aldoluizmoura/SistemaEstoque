@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SistemaEstoque.API.Autenticação;
 using SistemaEstoque.API.Models;
 using SistemaEstoque.API.Models.ModelsResponse;
@@ -52,19 +54,9 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> ListarFabricantes()
         {
-            var fabricantes = _mapper.Map<IEnumerable<FabricanteDTO>>(await _fabricanteRepository.ObterFabricantes());
-            var listaFabricantes = new List<FabricantesResponse>();
+            var fabricantes = await _fabricanteRepository.ObterFabricantes();           
 
-            if (fabricantes.Any())
-            {
-                foreach (var item in fabricantes)
-                {
-                    var fabricante = await PegarFabricante(item.Id);
-                    var documento = await PegarDocumento(fabricante.DocumentoId);
-                    var fabricanteResponse = new FabricantesResponse(item.Nome, documento.Numero, item.Codigo, item.Ativo, item.Id);
-                    listaFabricantes.Add(fabricanteResponse);
-                }
-            }
+            var listaFabricantes = fabricantes.Select(f => new FabricantesResponse(f.Nome, f.Documento.Numero, f.Codigo, f.Ativo, f.Id)).ToList();
 
             return Ok(listaFabricantes.OrderBy(f=>f.Codigo));
         }
@@ -99,22 +91,33 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                fabricanteDto.Nome = CapitalizarNome(fabricanteDto.Nome);
-
                 await PegarUsuarioId(fabricanteDto);
 
-                var fabricante = _mapper.Map<Fabricante>(fabricanteDto);                                        
-
-                if (_notificador.TemNotificacao())
-                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+                var fabricante = _mapper.Map<Fabricante>(fabricanteDto);
+                fabricante.Documento = new Documento(fabricanteDto.NumeroDocumento);
 
                 await _fabricanteService.AdicionarFabricante(fabricante);
-                var documento = await PegarDocumento(fabricante.DocumentoId);
 
-                return CreatedAtAction(nameof(AdicionarFabricantes), new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));                        
+
+                return CreatedAtAction(nameof(AdicionarFabricantes), 
+                    new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
             }
             catch (EntidadeExcepetions ex)
             {
+                return BadRequest(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlException)
+                {
+                    if (sqlException.Number == 2627 || sqlException.Number == 2601)
+                        return Conflict("Já existe um Fabricante com esses dados");
+
+                    return BadRequest(sqlException.Message);
+                }
+
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
@@ -131,19 +134,38 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AtualizarFabricante(Guid fabricanteId, FabricanteDTO fabricanteDto)
         {
-            var fabricante = _mapper.Map<Fabricante>(fabricanteDto);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var fabricante = await PegarFabricante(fabricanteId);
             if (fabricante is null)
                 return NotFound("Fabricante não encontrado");
 
+            _mapper.Map(fabricanteDto, fabricante);
+
+            if (_notificador.TemNotificacao())
+                return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+            
             try
             {
                 await _fabricanteService.AtualizarFabricante(fabricante);
-                var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
+
+                return Ok(new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
             }
             catch (EntidadeExcepetions ex)
             {
+                return BadRequest(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlException)
+                {
+                    if (sqlException.Number == 2627 || sqlException.Number == 2601)
+                        return Conflict("Já existe um Fabricante com esses dados");
+
+                    return BadRequest(sqlException.Message);
+                }
+
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
@@ -167,12 +189,24 @@ namespace SistemaEstoque.API.Controllers
             try
             {
                 await _fabricanteService.MudarStatusFabricante(fabricante);
-                var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
+
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                return Ok(new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
             }
-            catch (Exception e)
+            catch (DbUpdateException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.InnerException is SqlException sqlException)
+                {
+                    return BadRequest(sqlException.Message);
+                }
+
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -193,12 +227,23 @@ namespace SistemaEstoque.API.Controllers
                 fabricante.AlterarNome(nomeFabricante);
                 await _fabricanteService.AtualizarFabricante(fabricante);
 
-                var documento = await PegarDocumento(fabricante.DocumentoId);
-                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                return Ok(new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
             }
-            catch (Exception e)
+            catch (DbUpdateException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.InnerException is SqlException sqlException)
+                {
+                    return BadRequest(sqlException.Message);
+                }
+
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
             }
         }
 
@@ -211,36 +256,39 @@ namespace SistemaEstoque.API.Controllers
         {
             var fabricante = await PegarFabricante(fabricanteId);
             if (fabricante is null)
-                return NotFound("Fabricante não encontrado");
-
-            var documento = await PegarDocumento(documentoId);
-            if (documento is null)
-                return NotFound("Documento não existe");
+                return NotFound("Fabricante não encontrado");           
 
             try
             {
-                if (!await _documentoService.VerificarDisponibilidadeDocumento(documento.Numero))
+                if (!await _documentoService.VerificarDisponibilidadeDocumento(fabricante.Documento.Numero))
                     return BadRequest("Documento não está mais disponível");
 
                 await _fabricanteService.AlterarDocumentoFabricante(fabricanteId, documentoId);
 
-                return Ok(new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                return Ok(new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id));
             }
-            catch (Exception e)
+            catch (DbUpdateException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.InnerException is SqlException sqlException)
+                {
+                    return BadRequest(sqlException.Message);
+                }
+
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
         private async Task ValidarCadastro(FabricanteDTO fabricanteDTO)
         {
-            await _documentoService.VerificarDisponibilidadeDocumento(fabricanteDTO.Documento.NumeroDocumento);
-        }
-
-        private static string CapitalizarNome(string nome)
-        {
-            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(nome);
-        }
+            await _documentoService.VerificarDisponibilidadeDocumento(fabricanteDTO.NumeroDocumento);
+        }        
 
         private async Task<Fabricante> PegarFabricante(Guid fabricanteId)
         {

@@ -21,6 +21,9 @@ namespace SistemaEstoque.Infra.Entidades
             if (!Validar(numero)) 
                 throw new EntidadeExcepetions("Documento inválido");
 
+            if(string.IsNullOrEmpty(numero))
+                throw new EntidadeExcepetions("número do documento não pode ser vazio!");
+
             Numero = numero;
             Tipo = DefinirTipoDocumento(numero);
             DataCriacao = DateTime.UtcNow;

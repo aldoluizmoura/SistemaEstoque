@@ -6,5 +6,6 @@ namespace SistemaEstoque.Infra.Interfaces.Repositorio
     {
         Task<IEnumerable<Fabricante>> ObterFabricantes();
         Task<Fabricante> ObterPorNome(string nomeFabricante);
+        Task<Fabricante> ObterPorId(Guid fabricanteId);
     }
 }

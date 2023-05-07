@@ -59,8 +59,6 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                CapitalizarNome(registroUsuarioDTO);
-
                 var usuario = _mapper.Map<Usuario>(registroUsuarioDTO);                    
 
                 if (_notificador.TemNotificacao())
@@ -93,7 +91,7 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -131,13 +129,7 @@ namespace SistemaEstoque.API.Controllers
         private Documento PegarDocumento(DocumentoDTO documentoDto)
         {
             return _mapper.Map<Documento>(documentoDto);
-        }
-
-        private string CapitalizarNome(RegistroUsuarioDTO registroUsuarioDTO) 
-        {
-            registroUsuarioDTO.Nome = CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(registroUsuarioDTO.Nome);
-            return registroUsuarioDTO.Nome;
-        }
+        }       
 
         private async Task<string> GerarJwt(string email)
         {

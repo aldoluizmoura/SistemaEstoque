@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SistemaEstoque.Infra.Entidades;
+using SistemaEstoque.Infra.Entidades.Extensions;
 using SistemaEstoque.Infra.Entidades.Validações;
 using SistemaEstoque.Infra.Exceptions;
 
@@ -10,7 +11,13 @@ namespace SistemaEstoque.Infra.Entidades
         internal List<string> _errors;
         public IReadOnlyCollection<string> Errors => _errors;
 
-        public string Nome { get; private set; }
+        private string _nome = string.Empty;
+        public string Nome
+        {
+            get { return _nome; }
+            set { _nome = StringExtensions.CapitalizarString(value); }
+        }
+
         public int Matricula { get; private set; }
         public DateTime DataNascimento { get; private set; }
         public DateTime DataCriacao { get; private set; }

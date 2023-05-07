@@ -9,6 +9,7 @@ using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Exceptions;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
+using SistemaEstoque.Negocio.Notificacões;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Mime;
@@ -26,19 +27,22 @@ namespace SistemaEstoque.API.Controllers
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly IProdutoService _produtoService;
         private readonly ICategoriaService _categoriaService;
-        private readonly IMapper _mapper;        
-        
+        private readonly IMapper _mapper;
+        private readonly INotificador _notificador;
+
         public ProdutoController(IProdutoRepository produtoRepository, 
                                  IProdutoService produtoService,
                                  IMapper mapper,
                                  ICategoriaService categoriaService,
-                                 ICategoriaRepository categoriaRepository)
+                                 ICategoriaRepository categoriaRepository,
+                                 INotificador notificador)
         {
             _produtoService = produtoService;
             _produtoRepository = produtoRepository;
             _mapper = mapper;
             _categoriaService = categoriaService;
             _categoriaRepository = categoriaRepository;
+            _notificador = notificador;
         }
 
         [HttpGet("listar-produtos")]
@@ -51,7 +55,7 @@ namespace SistemaEstoque.API.Controllers
             var listaProdutos = produtos.Select(p => new ProdutoResponse(p.Descricao, p.Codigo, p.Ativo, p.DataVencimento, p.Marca, p.Modelo, p.Categoria.Nome, p.QuantidadeEstoque, p.Id))
                                         .OrderBy(p => p.Codigo).ToList();
 
-            return Ok(listaProdutos.OrderBy(p => p.Codigo));
+            return Ok(listaProdutos);
         }
 
         [HttpGet("pegar-produto-por-id")]
@@ -120,11 +124,19 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AdicionarCategoria(CategoriaDto categoriaDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+
             var categoria = _mapper.Map<Categoria>(categoriaDto);
+
+            if (_notificador.TemNotificacao())
+                return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
             try
             {
                 await _categoriaService.AdicionarCategoria(categoria); 
-                var categoriaResponse = new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id);
+                var categoriaResponse = new CategoriasResponse(categoria.Nome, categoria.Codigo, categoria.Id);             
+
                 return CreatedAtAction(nameof(AdicionarCategoria), categoriaResponse);
             }
             catch (EntidadeExcepetions ex)
@@ -167,11 +179,17 @@ namespace SistemaEstoque.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AdicionarProdutos(ProdutoDto produtoDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+
             try
             {
                 PegarUsuarioId(produtoDto);
 
                 var produto = _mapper.Map<Produto>(produtoDto);
+
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
 
                 var categoria = await _categoriaRepository.ObterPorId(produtoDto.CategoriaId);
                 if(categoria is null)
@@ -279,6 +297,10 @@ namespace SistemaEstoque.API.Controllers
             try
             {
                 produto = _mapper.Map<Produto>(produtoDto);
+
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
                 await _produtoService.AtualizarProduto(produto);
                 return Ok(new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id));
             }
@@ -364,11 +386,6 @@ namespace SistemaEstoque.API.Controllers
                 var claim = AuthExtension.PegarUsuarioIdDoContext(context);
                 produtoDto.UsuarioId = new Guid(claim?.Value);
             }
-        }
-
-        private static string CapitalizarString(string value)
-        {
-            return CultureInfo.GetCultureInfo("pt-BR").TextInfo.ToTitleCase(value);
         }
     }
 }

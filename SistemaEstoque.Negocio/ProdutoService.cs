@@ -81,11 +81,8 @@ namespace SistemaEstoque.Negocio
 
             try
             {
-                if (produto.QuantidadeEstoque > 0)
-                {
-                    produto.ReporEstoque(quantidade);
-                    await AtualizarProduto(produto);
-                }
+                produto.ReporEstoque(quantidade);
+                await AtualizarProduto(produto);
             }
             catch (DbUpdateException ex)
             {

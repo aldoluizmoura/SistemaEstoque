@@ -330,13 +330,13 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                if(await _produtoService.ReporEstoque(produto.Id, quantidade))
-                {
-                    var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
-                    return CreatedAtAction(nameof(ReporEstoque), produtoResponse);
-                }                    
+                await _produtoService.ReporEstoque(produto.Id, quantidade);
 
-                return BadRequest("Quantidade inválida");
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(ReporEstoque), produtoResponse);
             }
             catch (Exception ex)
             {
@@ -358,13 +358,13 @@ namespace SistemaEstoque.API.Controllers
 
             try
             {
-                if(await _produtoService.DebitarEstoque(produto.Id, quantidade))
-                {
-                    var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
-                    return CreatedAtAction(nameof(DebitarEstoque), produtoResponse);
-                }                
+                await _produtoService.DebitarEstoque(produto.Id, quantidade);
 
-                return BadRequest(new ProdutoErrorInfo(produto.QuantidadeEstoque,quantidade));
+                if (_notificador.TemNotificacao())
+                    return BadRequest(new ErrorModel(_notificador.ObterNotificacoes()));
+
+                var produtoResponse = new ProdutoResponse(produto.Descricao, produto.Codigo, produto.Ativo, produto.DataVencimento, produto.Marca, produto.Modelo, produto.Categoria.Nome, produto.QuantidadeEstoque, produto.Id);
+                return CreatedAtAction(nameof(DebitarEstoque), produtoResponse);
             }
             catch (Exception ex) 
             {

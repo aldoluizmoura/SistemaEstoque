@@ -108,19 +108,11 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException is SqlException sqlException)
-                {
-                    if (sqlException.Number == 2627 || sqlException.Number == 2601)
-                        return Conflict("Já existe um Fabricante com esses dados");
-
-                    return BadRequest(sqlException.Message);
-                }
-
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -156,19 +148,11 @@ namespace SistemaEstoque.API.Controllers
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException is SqlException sqlException)
-                {
-                    if (sqlException.Number == 2627 || sqlException.Number == 2601)
-                        return Conflict("Já existe um Fabricante com esses dados");
-
-                    return BadRequest(sqlException.Message);
-                }
-
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -303,11 +287,6 @@ namespace SistemaEstoque.API.Controllers
                 var claim = AuthExtension.PegarUsuarioIdDoContext(context);
                 fabricanteDto.UsuarioId = new Guid(claim?.Value);
             }
-        }       
-
-        private async Task<Documento> PegarDocumento(Guid documentoId)
-        {
-            return await _documentoRepository.ObterPorId(documentoId);
         }
     }
 }

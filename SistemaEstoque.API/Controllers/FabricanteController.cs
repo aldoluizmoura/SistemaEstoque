@@ -13,7 +13,6 @@ using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
 using SistemaEstoque.Negocio.Notificacões;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Net.Mime;
 using System.Security.Claims;
 
@@ -71,9 +70,8 @@ namespace SistemaEstoque.API.Controllers
 
             if(fabricante is null)
                 return NotFound("Fabricante não encontrado");
-
-            var documento = await PegarDocumento(fabricante.DocumentoId);
-            var fabricanteResponse = new FabricantesResponse(fabricante.Nome, documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id);
+            
+            var fabricanteResponse = new FabricantesResponse(fabricante.Nome, fabricante.Documento.Numero, fabricante.Codigo, fabricante.Ativo, fabricante.Id);
             return Ok(fabricanteResponse);
         }
 

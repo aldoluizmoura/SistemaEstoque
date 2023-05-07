@@ -1,4 +1,5 @@
-﻿using SistemaEstoque.Infra.Entidades;
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaEstoque.Infra.Entidades;
 using SistemaEstoque.Infra.Interfaces.Repositorio;
 using SistemaEstoque.Negocio.Interfaces;
 using SistemaEstoque.Negocio.Notificacões;
@@ -18,21 +19,31 @@ namespace SistemaEstoque.Negocio
 
         public async Task MudarStatusUsuario(Usuario usuario)
         {
-            usuario.Ativo = usuario.Ativo ? usuario.Desativar() : usuario.Ativar();
-            
-            await _usuarioRepository.AtualizarUsuario(usuario);
+            try
+            {
+                usuario.Ativo = usuario.Ativo ? usuario.Desativar() : usuario.Ativar();
+                await _usuarioRepository.AtualizarUsuario(usuario);
+            }
+            catch (DbUpdateException ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao($"Não foi possível atualizar {ex.Message}"));
+            }
         }
 
         public async Task<bool> VerficarDisponibilidadeEmail(string email)
         {
-            if (email is null)
+            if (string.IsNullOrEmpty(email))
             {
                 _notificador.AdicionarNotificacao(new Notificacao("email não pode ser vazio"));
                 return false;
             }
 
             if (await _usuarioRepository.ObterPorEmail(email) is null)
-                return true;            
+                return true;
 
             _notificador.AdicionarNotificacao(new Notificacao("Email já está em uso"));
             return false;
@@ -47,11 +58,6 @@ namespace SistemaEstoque.Negocio
 
             _notificador.AdicionarNotificacao(new Notificacao("Não é possivel cadastrar usuário menor de idade!"));
             return false;
-        }
-
-        private async Task<Usuario> PegarIdUsuario(Guid usuarioId)
-        {
-            return await _usuarioRepository.ObterPorId(usuarioId);
         }
     }
 }

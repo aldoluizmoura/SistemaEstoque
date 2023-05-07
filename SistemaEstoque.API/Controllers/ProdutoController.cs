@@ -274,10 +274,7 @@ namespace SistemaEstoque.API.Controllers
             var produto = await PegarProduto(produtoId);
 
             if (produto is null) 
-                return NotFound("Produto não encontrado");
-
-            if (!produto.Ativo)
-                return BadRequest("Produto não está ativo");
+                return NotFound("Produto não encontrado");           
 
             try
             {
